@@ -14,7 +14,11 @@
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
-    }
+    },
+    "skylineRenderEnable": false,
+    "packNpmRelationList": [],
+    "ignoreUploadUnusedFiles": true,
+    "useCompilerPlugins": false
   },
   "compileType": "miniprogram",
   "libVersion": "3.8.0",
