@@ -1,0 +1,133 @@
+.feedback-page {
+  background: #fff;
+  padding: 30rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+.feedback-page .nav-bar {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+}
+.feedback-page .nav-bar .back {
+  font-size: 36rpx;
+  margin-right: 20rpx;
+}
+.feedback-page .nav-bar .title {
+  font-size: 32rpx;
+}
+.feedback-page .section {
+  margin-bottom: 40rpx;
+}
+.feedback-page .section .label {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  display: block;
+}
+.feedback-page .section .required {
+  color: red;
+}
+.feedback-page .section .textarea {
+  width: 100%;
+  height: 200rpx;
+  border: 1px solid #ddd;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+.feedback-page .section .tip {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+.feedback-page .section .image-upload-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+.feedback-page .section .image-item {
+  position: relative;
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 8rpx;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+.feedback-page .section .preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8rpx;
+}
+.feedback-page .section .delete-btn {
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  width: 40rpx;
+  height: 40rpx;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 28rpx;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  cursor: pointer;
+}
+.feedback-page .section .upload-placeholder {
+  width: 150rpx;
+  height: 150rpx;
+  background: #f5f5f5;
+  border: 1px dashed #ccc;
+  border-radius: 8rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50rpx;
+  color: #999;
+}
+.feedback-page .section .input-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  padding: 10rpx 20rpx;
+  border-radius: 8rpx;
+  margin-top: 20rpx;
+}
+.feedback-page .section .input-group .icon {
+  margin-right: 10rpx;
+  font-size: 28rpx;
+}
+.feedback-page .section .input-group .input {
+  flex: 1;
+  font-size: 28rpx;
+}
+.feedback-page .section .checkbox {
+  display: flex;
+  align-items: center;
+}
+.feedback-page .section .checkbox input {
+  margin-right: 16rpx;
+  width: 32rpx;
+  height: 32rpx;
+}
+.feedback-page .section .checkbox .checkbox-text {
+  font-size: 28rpx;
+  color: #333;
+}
+.feedback-page .footer {
+  margin-top: 40rpx;
+}
+.feedback-page .footer .submit-btn {
+  background: #007aff;
+  color: white;
+  font-size: 30rpx;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  width: 100%;
+}
+
+/*# sourceMappingURL=index.css.map */
