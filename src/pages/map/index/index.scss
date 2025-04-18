@@ -1,0 +1,195 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.search-bar {
+  padding: 16rpx;
+  background: #f5f5f5;
+  z-index: 10;
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 16rpx;
+    padding: 8rpx 16rpx;
+
+    .search-input {
+      flex: 1;
+      font-size: 28rpx;
+    }
+
+    .search-btn {
+      margin-left: 16rpx;
+      padding: 8rpx 16rpx;
+      background-color: white;
+
+      color: blue;
+      border-radius: 8rpx;
+      font-size: 28rpx;
+    }
+  }
+
+  .history-list {
+    margin-top: 8rpx;
+    background: white;
+    border-radius: 12rpx;
+    padding: 12rpx;
+
+    .history-item {
+      padding: 10rpx 0;
+      border-bottom: 1px solid #eee;
+      font-size: 26rpx;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+
+.map-image {
+  position: absolute;
+  top: 100px;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  z-index: 0;
+}
+
+.floor-selector {
+  z-index: 99;
+  top: 40%;
+  display: flex;
+  position: fixed;
+  width: 10%;
+}
+
+// 左侧楼层栏
+.floor-list {
+  width: 80rpx;
+  background: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #ccc;
+}
+
+.floor-item {
+  padding: 20rpx;
+  text-align: center;
+  font-size: 28rpx;
+  border-bottom: 1px solid #ddd;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.floor-item .arrow {
+  font-size: 24rpx;
+  margin-left: 10rpx;
+}
+
+.floor-item.active {
+  background-color: #007aff;
+  color: white;
+}
+
+// 右侧弹出的楼栋栏
+.building-popup {
+  position: absolute;
+  left: 80rpx;
+  top: 0;
+  background-color: #3399ff;
+  z-index: 99;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  border-radius: 8rpx;
+  padding: 10rpx 0;
+}
+
+.building-scroll {
+  max-height: 400rpx; // 最多显示大概10项（你可以根据行高调整）
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.building-item {
+  padding: 20rpx;
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 28rpx;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.building-item:last-child {
+  border-bottom: none;
+}
+
+.place-card {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 20rpx;
+  border-top: 1px solid #ddd;
+  box-shadow: 0 -4rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.place-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.place-desc {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+
+.actions {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.action-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  margin: 0 5px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.action-button:nth-child(2) {
+  background-color: #d32f2f;
+  color: #fff;
+}
+
+.icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 10rpx;
+  display: inline-block;
+}
+
+
+.container1 {
+  position: relative;
+  left: 0;
+  width: 100vw;
+  height: 500px;
+  z-index: 0; /* ✅ 不要为负数 */
+  pointer-events: auto; /* ✅ 允许它响应拖动等事件 */
+}

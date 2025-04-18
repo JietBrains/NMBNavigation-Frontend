@@ -18,7 +18,7 @@
       <text class="label">上传截图</text>
       <view class="image-upload-list">
         <!-- 展示已上传的图片 -->
-        <view v-for="(img, index) in imageList" :key="index" class="image-item">
+        <view v-for="(img, index) in imageList" :key="index" class="image-item" >
           <image :src="img" mode="aspectFill" class="preview"/>
           <view class="delete-btn" @tap="removeImage(index)">×</view>
         </view>
