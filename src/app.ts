@@ -1,13 +1,12 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import {setupStore} from './stores/index'
 import './app.scss'
-import '@nutui/nutui-taro/dist/style.css'
+
 
 const App = createApp({
   onShow(options) {
   },
 })
-
-App.use(createPinia())
+setupStore(App)
 
 export default App

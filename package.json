@@ -40,6 +40,7 @@
     "@tarojs/components": "4.0.10",
     "@tarojs/helper": "4.0.10",
     "@tarojs/plugin-framework-vue3": "4.0.10",
+    "@tarojs/plugin-html": "^4.0.10",
     "@tarojs/plugin-platform-alipay": "4.0.10",
     "@tarojs/plugin-platform-h5": "4.0.10",
     "@tarojs/plugin-platform-jd": "4.0.10",
@@ -51,12 +52,14 @@
     "@tarojs/shared": "4.0.10",
     "@tarojs/taro": "4.0.10",
     "pinia": "^2.0.10",
+    "taro-ui": "^3.3.0",
+    "taro-ui-vue3": "^1.0.0-alpha.21",
     "vue": "^3.2.24"
   },
   "devDependencies": {
     "@babel/core": "^7.8.0",
     "@babel/plugin-proposal-class-properties": "7.14.5",
-    "@tarojs/cli": "4.0.10",
+    "@tarojs/cli": "^4.0.10",
     "@tarojs/taro-loader": "4.0.10",
     "@tarojs/webpack5-runner": "4.0.10",
     "@types/webpack-env": "^1.13.6",

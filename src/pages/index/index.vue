@@ -3,7 +3,13 @@
     <text>这是首页</text>
     <button @tap="toHome">Home</button>
     <TabBar />
+
   </view>
+  <nut-menu>
+    <nut-menu-item v-model="val1" :options="options1" />
+    <nut-menu-item v-model="val2" :options="options2" @change="onChange" />
+  </nut-menu>
+  hello world
 </template>
 
 <script lang="ts" setup>
@@ -12,10 +18,27 @@ import TabBar from "../../components/TabBar.vue";
 import Taro from '@tarojs/taro'
 function toHome() {
   Taro.navigateTo({
-        url: '/pages/home/index',
-    })
+    url: '/pages/home/index',
+  })
 }
 
+import { ref } from 'vue'
+const val1 = ref(0)
+const val2 = ref('a')
+const options1 = ref([
+  { text: '全部商品', value: 0 },
+  { text: '新款商品', value: 1 },
+  { text: '活动商品', value: 2 }
+])
+const options2 = ref([
+  { text: '默认排序', value: 'a' },
+  { text: '好评排序', value: 'b' },
+  { text: '销量排序', value: 'c' }
+])
+
+const onChange = (val) => {
+  console.log('val', val)
+}
 </script>
 
 <style scoped>

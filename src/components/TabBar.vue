@@ -1,29 +1,46 @@
 <template>
-    <view class="tab-bar">
-        <view v-for="(item, index) in tabs" :key="index" class="tab-item" :class="{ active: current == index }"
-            @tap="switchTab(index)">
-            <nut-icon :name="item.icon" size="24" />
-            <text>{{ item.text }}</text>
-        </view>
-    </view>
+    <nut-tabbar v-model="active" @tab-switch="switchTab" bottom safe-area-inset-bottom placeholder>
+        <nut-tabbar-item tab-title="首页" name="index" @click="goIndex">
+            <template #icon>
+                <Home></Home>
+            </template>
+        </nut-tabbar-item>
+
+        <nut-tabbar-item tab-title="搜索" name="recode" @click="goSearch">
+            <template #icon>
+                <Search></Search>
+            </template>
+        </nut-tabbar-item>
+
+        <nut-tabbar-item tab-title="我的" name="my" @click="goMy">
+            <template #icon>
+                <My></My>
+            </template>
+        </nut-tabbar-item>
+    </nut-tabbar>
 </template>
-  
+
 <script lang="ts" setup>
-import { ref } from 'vue';
 import Taro from '@tarojs/taro';
+import { Home, My, Search } from '@nutui/icons-vue-taro'
+import { useTabbarStore } from 'src/stores/tabbar';
 
-const tabs = [
-    { text: '首页', icon: 'home', path: '/pages/index/index' },
-    { text: '我的', icon: 'my', path: '/pages/profile/index' },
-    { text: '设置', icon: 'setting', path: '/pages/settings/index' },
-];
+const store = useTabbarStore()
+const active = store.getTabbarSelectedName
 
-const current = ref(0);
+const switchTab = (item: Record<string, unknown>) => {
+    store.setTabbarSelectedNmae(item.name)
+}
 
-function switchTab(index: number) {
-    current.value = index;
-    Taro.navigateTo({ url: tabs[index].path });
-    console.log(current.value)
+const goIndex = () => {
+    Taro.redirectTo({ url: '/pages/home/index' })
+}
+const goMy = () => {
+    Taro.redirectTo({ url: '/pages/profile/index' })
+}
+
+const goSearch = () => {
+    Taro.redirectTo({ url: '/pages/search/index' })
 }
 </script>
   
