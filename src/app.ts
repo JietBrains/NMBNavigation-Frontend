@@ -1,10 +1,10 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import Icon  from '@nutui/nutui-taro'
-
+import { Button } from "@nutui/nutui-taro";
 
 import './app.scss'
 import '@nutui/nutui-taro/dist/style.css'
+import '@nutui/touch-emulator';
 
 const App = createApp({
   onShow(options) {
@@ -12,6 +12,6 @@ const App = createApp({
 })
 
 App.use(createPinia())
-App.use(Icon)
+App.use(Button)
 
 export default App
