@@ -1,16 +1,18 @@
 <template>
-    <view class="home">
-        <text>这是首页</text>
-        <TabBar />
-    </view>
+  <view class="index">
+    <Item />
+    
+  </view>
 </template>
-  
-<script lang="ts" setup>
-import TabBar from "../../components/TabBar.vue";
-</script>
-  
-<style scoped>
-.home {
-    padding-bottom: 60px;
+
+<script>
+import './index.scss'
+import Item from '../../components/Item.vue'
+
+export default {
+  name: 'Index',
+  components: {
+    Item
+  }
 }
-</style>
+</script>

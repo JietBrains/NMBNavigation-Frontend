@@ -1,7 +1,5 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { Button } from "@nutui/nutui-taro";
-
 import './app.scss'
 import '@nutui/nutui-taro/dist/style.css'
 
@@ -11,6 +9,5 @@ const App = createApp({
 })
 
 App.use(createPinia())
-App.use(Button)
 
 export default App
