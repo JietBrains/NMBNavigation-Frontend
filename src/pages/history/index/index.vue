@@ -68,8 +68,9 @@ function onSearch() {
   history.value = [newItem, ...list].slice(0, 10)
   Taro.setStorageSync(STORAGE_KEY, history.value)
 
-  // TODO: 执行搜索行为
-  Taro.showToast({title: `搜索：${newItem.name}`, icon: 'none'})
+  Taro.navigateTo({
+    url: `/pages/place/index/index?name=${keyword.value}`,
+  })
 }
 
 function selectHistory(item) {

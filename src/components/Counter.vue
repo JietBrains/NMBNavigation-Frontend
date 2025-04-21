@@ -4,7 +4,9 @@
     <view class="button" @tap="onAdd2">首页</view>
     <view class="button" @tap="onAdd3">搜索页</view>
     <view class="button" @tap="onAdd4">收藏</view>
-    <view class="button" @tap="onAdd5">查找最近</view>
+    <view class="button" @tap="onAdd5">地点</view>
+    <view class="button" @tap="onAdd6">导航</view>
+    <view class="button" @tap="onAdd7">查找最近地址</view>
   </view>
 </template>
 
@@ -39,7 +41,20 @@ const onAdd4 = () => {
   })
 }
 
+
 const onAdd5 = () => {
+  Taro.navigateTo({
+    url: '/pages/place/index/index',
+  })
+}
+
+const onAdd6 = () => {
+  Taro.navigateTo({
+    url: '/pages/navigation/index/index',
+  })
+}
+
+const onAdd7 = () => {
   Taro.navigateTo({
     url: '/pages/findLatest/index/index',
   })
