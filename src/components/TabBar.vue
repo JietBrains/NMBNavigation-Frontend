@@ -1,7 +1,7 @@
 <template>
     <view class="tab-bar">
-        <view v-for="(item, index) in tabs" :key="index" class="tab-item" :class="{ active: current === index }"
-            @click="switchTab(index)">
+        <view v-for="(item, index) in tabs" :key="index" class="tab-item" :class="{ active: current == index }"
+            @tap="switchTab(index)">
             <nut-icon :name="item.icon" size="24" />
             <text>{{ item.text }}</text>
         </view>
@@ -23,6 +23,7 @@ const current = ref(0);
 function switchTab(index: number) {
     current.value = index;
     Taro.navigateTo({ url: tabs[index].path });
+    console.log(current.value)
 }
 </script>
   
