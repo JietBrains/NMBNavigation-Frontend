@@ -14,7 +14,9 @@
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
-    }
+    },
+    "ignoreUploadUnusedFiles": true,
+    "packNpmRelationList": []
   },
   "compileType": "miniprogram",
   "libVersion": "3.8.0",
