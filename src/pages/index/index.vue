@@ -1,17 +1,16 @@
 <template>
-  <view class="index">
-    <Counter />
+  <view class="home">
+    <text>这是首页</text>
+    <TabBar />
   </view>
 </template>
 
-<script>
-import './index.scss'
-import Counter from '../../components/Counter.vue'
-
-export default {
-  name: 'Index',
-  components: {
-    Counter
-  }
-}
+<script lang="ts" setup>
+import TabBar from "../../components/TabBar.vue";
 </script>
+
+<style scoped>
+.home {
+  padding-bottom: 60px; /* 为底部导航栏留出空间 */
+}
+</style>

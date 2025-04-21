@@ -1,11 +1,12 @@
 <template>
-    这是个人中心
+    <view class="home">
+        <text>这是个人中心</text>
+        <TabBar />
+    </view>
 </template>
   
-<script>
-
+<script lang="ts" setup>
+import TabBar from "../../components/TabBar.vue";
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

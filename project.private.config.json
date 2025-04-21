@@ -3,5 +3,26 @@
   "projectname": "myApp",
   "setting": {
     "compileHotReLoad": true
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/index/index",
+          "pathName": "pages/index/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null,
+          "partialCompile": {
+            "enabled": false,
+            "pages": [
+              "pages/home/index",
+              "pages/profile/index",
+              "pages/settings/index"
+            ]
+          }
+        }
+      ]
+    }
   }
 }

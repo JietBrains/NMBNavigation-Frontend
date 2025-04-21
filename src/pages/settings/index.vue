@@ -1,8 +1,12 @@
 <template>
-    这是设置页面
+    <view class="home">
+        <text>这是设置页面</text>
+        <TabBar />
+    </view>
 </template>
   
-<script>
+<script lang="ts" setup>
+import TabBar from "../../components/TabBar.vue";
 
 </script>
 
