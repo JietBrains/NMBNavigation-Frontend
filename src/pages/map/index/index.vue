@@ -17,16 +17,9 @@
 
     </view>
 
-<!--    <view class="container1" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">-->
-<!--      <canvas-->
-<!--        type="2d"-->
-<!--        id="canvas"-->
-<!--        canvas-id="canvas"-->
-<!--        style="width: 100%; height: 400px; background: white"-->
-<!--      />-->
-<!--    </view>-->
 
-     <web-view src="http://localhost:5173/" @message="handleMessage"/>
+     <web-view src="http://localhost:5173/"     @message="handleMessageFromWeb"
+    :bindmessage="handleMessageFromWeb"/>
     <!--    <image src="/assets/A1.jpg" alt="底图" class="map-image" mode="aspectFill"/>-->
     <!-- 地图与楼层导航 -->
     <view class="floor-selector" @tap.stop>
@@ -123,26 +116,9 @@ function drawImage(img) {
   ctx.restore()
 }
 
-function onTouchStart(e) {
-  const touch = e.touches[0]
-  lastTouch = {x: touch.clientX, y: touch.clientY}
-}
-
-function onTouchMove(e) {
-  if (!lastTouch) return
-  const touch = e.touches[0]
-  const deltaX = touch.clientX - lastTouch.x
-  const deltaY = touch.clientY - lastTouch.y
-
-  position.value.x += deltaX
-  position.value.y += deltaY
-  lastTouch = {x: touch.clientX, y: touch.clientY}
-
-  drawImage(imageRef) // 重绘
-}
-
-function onTouchEnd() {
-  lastTouch = null
+const handleMessageFromWeb = (e) => {
+  const data = e.detail.data[0]
+  console.log('收到来自 web 的消息：', data)
 }
 
 

@@ -20,13 +20,13 @@
         class="fav-item"
         @tap="goToLocation(item)"
       >
-       <image src="/assets/icons/收藏.png" class="icon"/>
+       <image src="/assets/icons/收藏 (已收藏).png" class="icon"/>
         <view class="info">
           <view class="line">
             {{ item.floor }}　{{ item.building }}　{{ item.name }}
           </view>
         </view>
-        <view class="icon">➡️</view>
+        <image src="/assets/icons/收藏 (已收藏).png" class="icon"/>
       </view>
     </view>
   </view>
@@ -35,7 +35,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import Taro from '@tarojs/taro'
-import collectIcon from 'src/assets/icons/收藏.png'
+import collectIcon from 'src/assets/icons/收藏 (已收藏).png'
+import goto from 'src/assets/icons/前往.png'
 
 const tabs = ['教室', '零食柜', '厕所']
 const currentTab = ref('教室')

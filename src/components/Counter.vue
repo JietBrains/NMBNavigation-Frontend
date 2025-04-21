@@ -4,6 +4,7 @@
     <view class="button" @tap="onAdd2">首页</view>
     <view class="button" @tap="onAdd3">搜索页</view>
     <view class="button" @tap="onAdd4">收藏</view>
+    <view class="button" @tap="onAdd5">地点</view>
   </view>
 </template>
 
@@ -35,6 +36,13 @@ const onAdd3 = () => {
 const onAdd4 = () => {
   Taro.navigateTo({
     url: '/pages/collect/index/index',
+  })
+}
+
+
+const onAdd5 = () => {
+  Taro.navigateTo({
+    url: '/pages/place/index/index',
   })
 }
 
