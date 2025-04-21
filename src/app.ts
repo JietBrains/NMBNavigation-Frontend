@@ -4,7 +4,6 @@ import { Button } from "@nutui/nutui-taro";
 
 import './app.scss'
 import '@nutui/nutui-taro/dist/style.css'
-import '@nutui/touch-emulator';
 
 const App = createApp({
   onShow(options) {

@@ -12,6 +12,5 @@ import TabBar from "../../components/TabBar.vue";
 <style scoped>
 .home {
     padding-bottom: 60px;
-    /* 为底部导航栏留出空间 */
 }
 </style>
