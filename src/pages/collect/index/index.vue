@@ -26,9 +26,12 @@
             {{ item.floor }}　{{ item.building }}　{{ item.name }}
           </view>
         </view>
-        <image src="/assets/icons/收藏 (已收藏).png" class="icon"/>
+        <image src="/assets/icons/设置.png" class="icon"  @tap.stop="onChange"/>
       </view>
     </view>
+
+
+
   </view>
 </template>
 
@@ -36,7 +39,7 @@
 import { ref, computed } from 'vue'
 import Taro from '@tarojs/taro'
 import collectIcon from 'src/assets/icons/收藏 (已收藏).png'
-import goto from 'src/assets/icons/前往.png'
+import change from 'src/assets/icons/设置.png'
 
 const tabs = ['教室', '零食柜', '厕所']
 const currentTab = ref('教室')
@@ -59,8 +62,29 @@ function selectTab(tab) {
 
 function goToLocation(item) {
   Taro.navigateTo({
-    url: `/pages/location/index?id=${item.id}`
+    url: `/pages/place/index/index?name=${item.name}`
   })
+}
+
+const changeItem=ref(false);
+const onChange=()=>{
+Taro.showActionSheet({
+  itemList: [
+    '置顶',
+    //'前往该地点',
+    '删除该地点',
+  ],
+  success(res) {
+    if(res.tapIndex==="置顶"){
+        //todo
+    }else if(res.tapIndex==="删除该地点"){
+        //todo
+    }
+  },
+  fail(err) {
+    console.log('取消或出错', err)
+  }
+})
 }
 </script>
 
