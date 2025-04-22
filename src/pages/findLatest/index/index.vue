@@ -31,6 +31,7 @@
 <script setup>
 import './index.scss'
 import { ref, onMounted } from 'vue'
+import { getAllCollection } from 'src/utils/api'
 
 
 const keyword = ref('')
@@ -50,6 +51,11 @@ const onButtonTapVendingMachine = () => {
 
 const onConfirm = () => {
   console.log('确认按钮被点击')
+  getAllCollect().then((res) => {
+    console.log('获取收藏数据:', res)
+  }).catch((err) => {
+    console.error('获取收藏数据失败:', err)
+  })
 }
 
 const toggleImageSelection = (imageType) => {
