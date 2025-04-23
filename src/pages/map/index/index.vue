@@ -17,7 +17,7 @@
     </view>
 
 
-     <web-view src="http://localhost:5173/"     @message="handleMessageFromWeb"
+     <web-view src="http://8.140.200.27:8087/"     @message="handleMessageFromWeb"
     :bindmessage="handleMessageFromWeb"/>
 
     <view class="floor-selector" @tap.stop>
