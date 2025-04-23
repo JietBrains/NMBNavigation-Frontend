@@ -21,14 +21,16 @@
           </nut-input>
         </view>
 
-        <view class="button-group">
+        <nut-space direction="vertical" fill>
           <nut-button type="primary" plain block @click="handleLogin">
             登录
           </nut-button>
+
           <nut-button type="primary" plain block @click="handleWechatLogin">
             使用微信登录
           </nut-button>
-        </view>
+        </nut-space>
+
       </view>
     </view>
   </view>

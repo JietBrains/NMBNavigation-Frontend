@@ -10,5 +10,6 @@ declare module 'vue' {
     NutAvatar: typeof import('@nutui/nutui-taro')['Avatar']
     NutButton: typeof import('@nutui/nutui-taro')['Button']
     NutInput: typeof import('@nutui/nutui-taro')['Input']
+    NutSpace: typeof import('@nutui/nutui-taro')['Space']
   }
 }
