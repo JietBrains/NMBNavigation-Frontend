@@ -35,9 +35,11 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.7.7",
+    "@nutui/nutui-taro": "^4.3.13",
     "@tarojs/components": "4.0.10",
     "@tarojs/helper": "4.0.10",
     "@tarojs/plugin-framework-vue3": "4.0.10",
+    "@tarojs/plugin-html": "^4.0.10",
     "@tarojs/plugin-platform-alipay": "4.0.10",
     "@tarojs/plugin-platform-h5": "4.0.10",
     "@tarojs/plugin-platform-jd": "4.0.10",
@@ -54,6 +56,7 @@
   "devDependencies": {
     "@babel/core": "^7.8.0",
     "@babel/plugin-proposal-class-properties": "7.14.5",
+    "@nutui/auto-import-resolver": "^1.0.0",
     "@tarojs/cli": "4.0.10",
     "@tarojs/taro-loader": "4.0.10",
     "@tarojs/webpack5-runner": "4.0.10",
@@ -73,6 +76,7 @@
     "stylelint": "^14.4.0",
     "tsconfig-paths-webpack-plugin": "^4.0.1",
     "typescript": "^5.1.0",
+    "unplugin-vue-components": "^28.5.0",
     "vue-loader": "^17.0.0",
     "webpack": "5.91.0"
   }
