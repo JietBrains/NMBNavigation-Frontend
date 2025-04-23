@@ -1,12 +1,12 @@
 <template>
     <view class="home">
         <text>这是设置页面</text>
-        <TabBar />
+        <Tabbar />
     </view>
 </template>
   
 <script lang="ts" setup>
-import TabBar from "../../components/TabBar.vue";
+import Tabbar from "../../components/Tabbar.vue";
 
 </script>
 

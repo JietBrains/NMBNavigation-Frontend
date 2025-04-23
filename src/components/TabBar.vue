@@ -29,7 +29,7 @@ const store = useTabbarStore()
 const active = store.getTabbarSelectedName
 
 const switchTab = (item: Record<string, unknown>) => {
-    store.setTabbarSelectedNmae(item.name)
+    store.setTabbarSelectedName(item.name)
 }
 
 const goIndex = () => {
@@ -43,7 +43,7 @@ const goSearch = () => {
     Taro.redirectTo({ url: '/pages/search/index' })
 }
 </script>
-  
+
 <style scoped>
 .tab-bar {
     display: flex;

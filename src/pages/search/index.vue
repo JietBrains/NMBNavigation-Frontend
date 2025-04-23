@@ -29,12 +29,12 @@
                 </view>
             </view>
         </view>
-        <TabBar />
+        <Tabbar />
     </view>
 </template>
   
 <script lang="ts" setup>
-import TabBar from "../../components/TabBar.vue";
+import Tabbar from "../../components/Tabbar.vue";
 import { ref } from 'vue'
 
 const searchValue = ref('')

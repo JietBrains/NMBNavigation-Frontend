@@ -10,7 +10,17 @@ export default {
     "pages/history/index", 
     "pages/findLatest/index",
     "pages/collect/index", 
-    "pages/place/index"
+    "pages/place/index",
+    'pages/my/index',
+    'pages/reminderIndex/index',
+    'pages/reminder/index',
+    'pages/recode/index',
+    'pages/addRecode/index',
+    'pages/calendar/index',
+    'pages/intimate/index',
+    'pages/userinfo/index',
+    'pages/signin/index/index',
+    'pages/points/recode/index',
   ],
   window: {
     backgroundTextStyle: 'light',
@@ -18,22 +28,5 @@ export default {
     navigationBarTitleText: 'WeChat',
     navigationBarTextStyle: 'black'
   },
-  tabBar: {
-    custom: true,
-    // 为了绕过微信开发者工具的检查
-    list: [
-      {
-        pagePath: "pages/index/index",
-        text: "首页",
-        iconPath: "assets/home.png",
-        selectedIconPath: "assets/home.png"
-      },
-      {
-        pagePath: "pages/home/index",
-        text: "首页",
-        iconPath: "assets/home.png",
-        selectedIconPath: "assets/home.png"
-      }
-    ]
-  }
+  lazyCodeLoading: "requiredComponents",
 }

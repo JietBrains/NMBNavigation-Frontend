@@ -5,8 +5,8 @@
         </nut-form-item>
         <nut-form-item label="头像">
             <nut-avatar> <img :src="avatar" /> </nut-avatar>
-            <nut-button  style="float: right; margin-right: 5vw;"
-                type="success" open-type="chooseAvatar" @chooseavatar="onChooseAvatar" size="small">选择</nut-button>
+            <nut-button style="float: right; margin-right: 5vw;" type="success" open-type="chooseAvatar"
+                @chooseavatar="onChooseAvatar" size="small">选择</nut-button>
         </nut-form-item>
         <nut-space style="margin-left: 40vw; margin-top: 10px; margin-bottom: 10px;">
             <nut-button type="primary" size="small" @click="modify">修改</nut-button>
@@ -16,9 +16,9 @@
   
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useUserStore } from 'src/stores';
+import { useUserStore } from '../../stores';
 import Taro from '@tarojs/taro';
-import { postAction } from 'src/http';
+import { postAction } from '../../http';
 
 const store = useUserStore()
 const nickname = ref(store.nickname)
@@ -32,11 +32,11 @@ const onChooseAvatar = (e) => {
 }
 
 interface ApiResponse1 {
-  code: number;
-  msg: string;
-  data: {
-    url: string;
-  };
+    code: number;
+    msg: string;
+    data: {
+        url: string;
+    };
 }
 const modify = () => {
     if (doAvatar.value) {
@@ -44,14 +44,14 @@ const modify = () => {
             url: baseUrl + '/upload/v1/upload/add', //仅为示例，非真实的接口地址
             filePath: avatar.value,
             name: 'file',
-            formData:{
-               
+            formData: {
+
             },
             header: {
                 'Authorization': 'Bearer ' + store.accessToken,
                 // 'content-type': "multipart/json"
             },
-            success: function (result){
+            success: function (result) {
                 if (result.statusCode == 200) {
                     const parsedData: ApiResponse = JSON.parse(result.data);
                     avatar.value = parsedData.data.url
@@ -77,37 +77,37 @@ interface ApiResponse {
     message?: string;
 }
 async function modifyReq() {
-  try {
-    const result = await postAction('/usercenter/v1/user/modifyInfo', {
-        avatar: avatar.value, 
-        nickname: nickname.value,
-    }, {
-      loadingTitle: '正在修改...', // 请求时显示的加载提示
-      toastDuration: 1500 // 错误提示的显示时长
-    }, true) as ApiResponse;
+    try {
+        const result = await postAction('/usercenter/v1/user/modifyInfo', {
+            avatar: avatar.value,
+            nickname: nickname.value,
+        }, {
+            loadingTitle: '正在修改...', // 请求时显示的加载提示
+            toastDuration: 1500 // 错误提示的显示时长
+        }, true) as ApiResponse;
 
-    if (result.success) {
-        store.infoReq()
+        if (result.success) {
+            store.infoReq()
+            Taro.showToast({
+                title: '修改成功！',
+                icon: 'success', // 'error' 'success' 'loading' 'none'
+                duration: 1000
+            })
+            Taro.navigateBack({ delta: 1 })
+        } else {
+            Taro.showToast({
+                title: '修改失败！' + result.message,
+                icon: 'error', // 'error' 'success' 'loading' 'none'
+                duration: 1500
+            })
+        }
+    } catch (error) {
         Taro.showToast({
-            title: '修改成功！',
-            icon: 'success', // 'error' 'success' 'loading' 'none'
-            duration: 1000
-        })
-        Taro.navigateBack({delta: 1})
-    } else {
-        Taro.showToast({
-            title: '修改失败！' + result.message,
+            title: '请求异常!',
             icon: 'error', // 'error' 'success' 'loading' 'none'
             duration: 1500
         })
     }
-  } catch (error) {
-    Taro.showToast({
-        title: '请求异常!',
-        icon: 'error', // 'error' 'success' 'loading' 'none'
-        duration: 1500
-    })
-  }
 }
 
 </script>

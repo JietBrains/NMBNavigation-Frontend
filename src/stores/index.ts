@@ -5,5 +5,5 @@ export { useUserStore } from './user'
 export const store = createPinia()
 
 export function setupStore(app: App) {
-  app.use(store)
+    app.use(store)
 }
