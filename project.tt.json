@@ -1,7 +1,7 @@
 {
   "miniprogramRoot": "./",
   "projectname": "myApp",
-  "description": "软工前端项目",
+  "description": "",
   "appid": "touristappid",
   "setting": {
     "urlCheck": true,
