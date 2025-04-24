@@ -30,8 +30,8 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
     defineConstants: {
       'process.env.NODE_ENV': JSON.stringify('development'),
       'process.env.API_MOCK_URL': JSON.stringify('http://localhost:4523/m1/6225353-5918947-default'),
-      'process.env.API_BASE_URL': JSON.stringify('http://localhost:3000/api'),
-      'process.env.USE_MOCK': JSON.stringify(true)
+      'process.env.API_BASE_URL': JSON.stringify('http://8.140.200.27:8080'),
+      'process.env.USE_MOCK': JSON.stringify(false)
     },
     copy: {
       patterns: [
