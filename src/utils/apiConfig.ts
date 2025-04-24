@@ -50,13 +50,26 @@ function request({
     });
 }
 
+// 辅助函数：将对象转换为查询字符串
+function objectToQueryString(obj: Record<string, any>) {
+    return Object.entries(obj)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+}
+
+
 
 // 定义 GET 请求
 function get(url: string, data?: Record<string, any>, header?: Record<string, string>) {
+    // 如果有数据，则将其转换为查询字符串
+    if (data) {
+        const queryString = objectToQueryString(data);
+        url = `${url}?${queryString}`;
+    }
     return request({
         url,
         method: 'GET',
-        data,
+        data: {}, // 由于参数已经在 URL 里，这里的 data 置为空
         header
     });
 }

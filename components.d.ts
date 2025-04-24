@@ -11,6 +11,8 @@ declare module 'vue' {
     Counter: typeof import('./src/components/Counter.vue')['default']
     NutButton: typeof import('@nutui/nutui-taro')['Button']
     NutCalendar: typeof import('@nutui/nutui-taro')['Calendar']
+    NutCascader: typeof import('@nutui/nutui-taro')['Cascader']
     NutCell: typeof import('@nutui/nutui-taro')['Cell']
+    NutDialog: typeof import('@nutui/nutui-taro')['Dialog']
   }
 }

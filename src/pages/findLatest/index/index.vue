@@ -26,16 +26,23 @@
     <view class="confirm-button" @tap="onConfirm" :style="{ backgroundColor: selectedImage ? '#007aff' : '#ccc' }"
       :disabled="!selectedImage">确认</view>
   </view>
+  <view>
+    <nut-cascader v-model:visible="visible" v-model="value" title="请选择您的当前位置" :options="options"></nut-cascader>
+  </view>
 </template>
 
 <script setup>
 import './index.scss'
 import { ref, onMounted } from 'vue'
-import { getAllCollection } from 'src/utils/api'
+import building from 'src/assets/building.json'
 
 
 const keyword = ref('')
 const selectedImage = ref('')
+const showDialog = ref(false)
+const visible = ref(false)
+const value = ref([])
+const options = ref(building)
 
 const onSearch = () => {
   console.log('搜索关键词:', keyword.value)
@@ -51,11 +58,13 @@ const onButtonTapVendingMachine = () => {
 
 const onConfirm = () => {
   console.log('确认按钮被点击')
-  getAllCollect().then((res) => {
-    console.log('获取收藏数据:', res)
-  }).catch((err) => {
-    console.error('获取收藏数据失败:', err)
-  })
+  showDialog.value = true
+  visible.value = true
+  if (selectedImage.value === 'toilet') {
+    onButtonTapToilet()
+  } else if (selectedImage.value === 'vendingMachine') {
+    onButtonTapVendingMachine()
+  }
 }
 
 const toggleImageSelection = (imageType) => {
@@ -65,8 +74,4 @@ const toggleImageSelection = (imageType) => {
     selectedImage.value = imageType
   }
 }
-
-onMounted(() => {
-  selectedImage.value = ''
-})
 </script>
