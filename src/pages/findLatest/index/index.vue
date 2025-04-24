@@ -35,6 +35,7 @@
 import './index.scss'
 import { ref, onMounted } from 'vue'
 import building from 'src/assets/building.json'
+import { searchOnePhoto, getAllCollection } from 'src/utils/api.ts'
 
 
 const keyword = ref('')

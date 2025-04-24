@@ -9,10 +9,9 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Counter: typeof import('./src/components/Counter.vue')['default']
-    NutButton: typeof import('@nutui/nutui-taro')['Button']
-    NutCalendar: typeof import('@nutui/nutui-taro')['Calendar']
+    NutAvatar: typeof import('@nutui/nutui-taro')['Avatar']
     NutCascader: typeof import('@nutui/nutui-taro')['Cascader']
     NutCell: typeof import('@nutui/nutui-taro')['Cell']
-    NutDialog: typeof import('@nutui/nutui-taro')['Dialog']
+    NutCellGroup: typeof import('@nutui/nutui-taro')['CellGroup']
   }
 }
