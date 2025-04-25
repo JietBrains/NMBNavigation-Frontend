@@ -1,4 +1,5 @@
 <template>
+  <nut-image-preview :show="showPreview" :images="imgList3" :init-no="currentIndex" @close="hideFn" />
   <view class="container">
     <view class="search-bar" @tap="onSearch">
       <image src="/assets/icons/搜索/搜索.png" class="icon" />
@@ -8,8 +9,8 @@
 
     <scroll-view scroll-y="true" class="scroll-area">
       <view class="swiper-demo">
-        <nut-swiper ref="swiperRef">
-          <nut-swiper-item v-for="(item, index) in imgList" :key="index" style="height: 150px">
+        <nut-swiper ref="swiperRef" pagination-visible pagination-color="#FF0000" @change="swiperOnChange" @click="showFn">
+          <nut-swiper-item v-for="(item, index) in imgList" :key="index" style="height: 200px" >
             <img :src="item" alt="" style="height: 100%; width: 100%" draggable="false" />
           </nut-swiper-item>
         </nut-swiper>
@@ -28,7 +29,7 @@
           <nut-cell v-for="(comment, index) in comments" :key="index" :title="comment.user" :sub-title="comment.content"
             size="large" :desc="comment.time">
             <template #icon>
-              <nut-avatar size="normal">
+              <nut-avatar size="small">
                 <image :src="comment.avatar" />
               </nut-avatar>
             </template>
@@ -42,11 +43,10 @@
 
     <view v-if="showInput" class="modal-mask">
       <view class="modal-content">
-        <view class="modal-title">请输入起点</view>
-        <input type="text" v-model="inputValue" placeholder="例如：F301" class="modal-input" />
+        <nut-cell title="选择地址" :desc="cascaderValue.toString() || '请选择地址'" @click="cascaderVisible = true" /> 
         <view class="modal-buttons">
-          <button @tap="cancel">取消</button>
-          <button @tap="confirm">确认</button>
+          <nut-button @click="cancel">取消</nut-button>
+          <nut-button type="primary" @click="confirm">确认</nut-button>
         </view>
       </view>
     </view>
@@ -75,12 +75,13 @@
         </nut-button>
       </view>
     </view>
-    <nut-popup v-model:visible="showPopup" position="bottom" @opened="handleOpened">
+    <nut-popup v-model:visible="showPopup" position="bottom">
       <nut-textarea v-model="textareaValue" :limit-show="true" :max-length="25" placeholder="请输入评论" />
       <view class="popup-buttons">
         <nut-button type="primary" size='normal' @click="OnCommitComment">提交</nut-button>
       </view>
     </nut-popup>
+    <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置" :options="options"></nut-cascader>
   </view>
 </template>
 
@@ -93,6 +94,7 @@ import collectIcon from 'src/assets/icons/收藏.png'
 import wayIcon from 'src/assets/icons/导航.png'
 import message from 'src/assets/icons/聊天.png'
 import { Star, Message, Left, Right } from '@nutui/icons-vue-taro'
+import building from 'src/assets/building.json'
 
 
 const params = Taro.getCurrentInstance().router?.params
@@ -103,14 +105,26 @@ const imgList = ref([
   '/assets/icons/导航.png',
   '/assets/icons/收藏.png',
 ])
+const imgList3 = ref([
+  {
+    'src': '/assets/A1.jpg',
+  },
+  {
+    'src': '/assets/icons/导航.png',
+  },
+  {
+    'src': '/assets/icons/收藏.png',
+  }
+])
 const showInput = ref(false)
 const inputValue = ref('')
 const showPopup = ref(false)
 const textareaValue = ref('')
+const cascaderVisible = ref(false)
 const comments = ref([
   {
     user: '用户A',
-    content: '这个产品太棒了，非常实用啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊asas萨达啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊纳斯哦闹i断奶的弄i那是都i爱上你都sand iOS难道i当年都欧纳塞哦对你扫i的你扫i的那丝哦对你是',
+    content: '这个产品太棒了，非常实用啊啊啊啊',
     time: '2025-04-24',
     avatar: 'https://picsum.photos/200/200'
   },
@@ -147,6 +161,10 @@ const comments = ref([
 ]);
 const swiperRef = ref()
 const selectedPlace = { name: '咖啡店', description: '提供咖啡、甜点和休闲环境。' }
+const options = ref(building)
+const cascaderValue = ref([])
+const showPreview = ref(false)
+const currentIndex = ref(0)
 
 const navigateToPlace = () => {
   showInput.value = true
@@ -192,7 +210,17 @@ const handleNext = () => {
   swiperRef.value?.next()
 }
 
+const hideFn = () => {
+  showPreview.value = false
+}
 
+const showFn = (index) => {
+  showPreview.value = true
+}
+
+const swiperOnChange = (index) => {
+  currentIndex.value = index + 1
+}
 
 </script>
 
