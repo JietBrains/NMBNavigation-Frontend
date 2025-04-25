@@ -35,7 +35,7 @@
 import './index.scss'
 import { ref, onMounted } from 'vue'
 import building from 'src/assets/building.json'
-import { searchOnePhoto, getAllCollection } from 'src/utils/api.ts'
+import { searchOnePhoto, getAllCollection, viewAllPhotoOnMainPage } from 'src/utils/api.ts'
 
 
 const keyword = ref('')
@@ -61,6 +61,9 @@ const onConfirm = () => {
   console.log('确认按钮被点击')
   showDialog.value = true
   visible.value = true
+  viewAllPhotoOnMainPage({'name': 'F101'}).then(res => {
+    console.log('获取到的照片:', res)
+  })
   if (selectedImage.value === 'toilet') {
     onButtonTapToilet()
   } else if (selectedImage.value === 'vendingMachine') {
