@@ -78,7 +78,7 @@
 
 .scroll-area {
   flex: 1;
-  max-height: 1000rpx;
+  max-height: 1400rpx;
   overflow-y: auto;
 }
 
@@ -134,6 +134,10 @@
 .modal-buttons {
   display: flex;
   justify-content: space-around;
+}
+
+.comment-section {
+  max-height: 500rpx;
 }
 
 /*# sourceMappingURL=index.css.map */
