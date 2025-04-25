@@ -7,13 +7,20 @@
     </view>
 
     <scroll-view scroll-y="true" class="scroll-area">
-      <view class="banner-container">
-        <swiper class="banner-swiper" indicator-dots="true" indicator-color="grey" indicator-active-color="#ff6600"
-          autoplay circular interval="3000" duration="500">
-          <swiper-item v-for="(img, index) in images" :key="index">
-            <image :src="img" class="banner-image" mode="aspectFill" />
-          </swiper-item>
-        </swiper>
+      <view class="swiper-demo">
+        <nut-swiper ref="swiperRef">
+          <nut-swiper-item v-for="(item, index) in imgList" :key="index" style="height: 150px">
+            <img :src="item" alt="" style="height: 100%; width: 100%" draggable="false" />
+          </nut-swiper-item>
+        </nut-swiper>
+        <view class="swiper-btns">
+          <view class="swiper-btn" @click="handlePrev">
+            <Left></Left>
+          </view>
+          <view class="swiper-btn" @click="handleNext">
+            <Right></Right>
+          </view>
+        </view>
       </view>
 
       <view class=comment-section>
@@ -62,7 +69,7 @@
         </nut-button>
         <nut-button shape="round" type="primary" size="normal" @click="navigateToPlace">
           <template #icon>
-            <image src="/assets/icons/导航.png" class="icon"/>
+            <image src="/assets/icons/导航.png" class="icon" />
           </template>
           去这里
         </nut-button>
@@ -71,7 +78,7 @@
     <nut-popup v-model:visible="showPopup" position="bottom" @opened="handleOpened">
       <nut-textarea v-model="textareaValue" :limit-show="true" :max-length="25" placeholder="请输入评论" />
       <view class="popup-buttons">
-        <nut-button type="primary" size ='normal' @click="OnCommitComment">提交</nut-button>
+        <nut-button type="primary" size='normal' @click="OnCommitComment">提交</nut-button>
       </view>
     </nut-popup>
   </view>
@@ -85,13 +92,13 @@ import photo from '/src/assets/A1.jpg'
 import collectIcon from 'src/assets/icons/收藏.png'
 import wayIcon from 'src/assets/icons/导航.png'
 import message from 'src/assets/icons/聊天.png'
-import { Star, Message } from '@nutui/icons-vue-taro'
+import { Star, Message, Left, Right } from '@nutui/icons-vue-taro'
 
 
 const params = Taro.getCurrentInstance().router?.params
 console.log(params?.name)
 
-const images = ref([
+const imgList = ref([
   '/assets/A1.jpg',
   '/assets/icons/导航.png',
   '/assets/icons/收藏.png',
@@ -138,7 +145,7 @@ const comments = ref([
     avatar: 'https://picsum.photos/200/202'
   }
 ]);
-
+const swiperRef = ref()
 const selectedPlace = { name: '咖啡店', description: '提供咖啡、甜点和休闲环境。' }
 
 const navigateToPlace = () => {
@@ -176,6 +183,13 @@ const confirm = () => {
 
 const onClickComment = () => {
   showPopup.value = true
+}
+
+const handlePrev = () => {
+  swiperRef.value?.prev()
+}
+const handleNext = () => {
+  swiperRef.value?.next()
 }
 
 
