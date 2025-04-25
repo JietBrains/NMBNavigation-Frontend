@@ -1,25 +1,17 @@
 <template>
     <view class="container">
-        <!-- 已登录时显示用户信息 -->
+        <!-- 用户信息展示 -->
         <image :src="userInfo.avatarUrl" class="avatar" />
         <text>{{ userInfo.nickName }}</text>
 
-        <!-- 未登录时显示授权按钮 -->
-        <button open-type="getUserInfo" @getuserinfo="handleGetUserInfo" class="login-btn">
-            微信登录
+        <!-- 获取用户信息按钮 -->
+        <button @click="handleGetUserProfile" class="auth-btn">
+            用户信息
         </button>
-    </view>
-    <view class="container">
-        <view class="userinfo">
-            <block wx:if="{{!hasUserInfo}}">
-                <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-                <button wx:else open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-            </block>
-            <block wx:else>
-                <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-                <text class="userinfo-nickname">{{ userInfo.nickName }}</text>
-            </block>
-        </view>
+
+        <button @click="test" class="auth-btn">
+            测试
+        </button>
     </view>
 </template>
 
@@ -27,9 +19,7 @@
 import { ref } from 'vue'
 import Taro from '@tarojs/taro'
 
-
-
-// 用户信息响应式变量
+// 用户信息状态
 const userInfo = ref<{
     nickName: string
     avatarUrl: string
@@ -37,45 +27,63 @@ const userInfo = ref<{
     nickName: '',
     avatarUrl: ''
 })
+const hasUserInfo = ref(false)
 
-// 处理用户授权事件
-const handleGetUserInfo = async (e: any) => {
-    if (e.detail.userInfo) {
-        // 直接获取微信返回的用户信息（无需额外接口）
-        const { nickName, avatarUrl } = e.detail.userInfo
-        userInfo.value = { nickName, avatarUrl }
+// 处理获取用户信息
+const handleGetUserProfile = async () => {
+    try {
+        // const res1 =  await Taro.login()
+        // console.log("login: " , res1)
 
-        // 调用微信登录接口获取 code
-        try {
-            const loginRes = await Taro.login()
-            if (loginRes.code) {
-                // 将 code + 用户信息发送到后端
-                await sendToServer(loginRes.code, nickName, avatarUrl)
-                Taro.showToast({ title: '登录成功', icon: 'success' })
-            }
-        } catch (error) {
-            Taro.showToast({ title: '登录失败', icon: 'error' })
+        // 调用 Taro 封装的 getUserProfile
+        const res = await Taro.getUserProfile({
+            desc: '用于完善个人资料',
+        })
+
+        console.log("getUserProfile: ",res)
+
+        // 更新用户信息状态
+        userInfo.value = {
+            nickName: res.userInfo.nickName,
+            avatarUrl: res.userInfo.avatarUrl
         }
-    } else {
-        Taro.showToast({ title: '您拒绝了授权', icon: 'none' })
+        hasUserInfo.value = true
+
+        // 可选：获取 code 并发送到服务端
+        // const loginRes = await Taro.login()
+        // if (loginRes.code) {
+        //     await sendToServer(loginRes.code, userInfo.value)
+        // }
+    } catch (error) {
+        Taro.showToast({ title: '用户拒绝授权', icon: 'none' })
     }
 }
 
+const test = async () => {
+    Taro.cloud.init({
+        env: 'cloud1-8gkxwphl4d1cef91',
+        traceUser: true
+    })
+
+    Taro.cloud.callFunction({
+        name: 'test',
+        complete: res => {
+            console.log('callFunction test result:', res)
+        }
+    })
+}
+
 // 发送数据到服务端
-const sendToServer = async (code: string, nickName: string, avatarUrl: string) => {
-    try {
-        await Taro.request({
-            url: 'https://2ad3-124-127-236-248.ngrok-free.app/api/login',
-            method: 'POST',
-            data: {
-                code,
-                nickName,
-                avatarUrl
-            }
-        })
-    } catch (error) {
-        console.error('请求失败:', error)
-    }
+const sendToServer = async (code: string, userInfo: { nickName: string, avatarUrl: string }) => {
+    await Taro.request({
+        url: 'https://6dd4-124-127-236-248.ngrok-free.app/api/login',
+        method: 'POST',
+        data: {
+            code,
+            nickName: userInfo.nickName,
+            avatarUrl: userInfo.avatarUrl
+        }
+    })
 }
 </script>
 
@@ -84,19 +92,19 @@ const sendToServer = async (code: string, nickName: string, avatarUrl: string) =
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40rpx;
+    padding: 20px;
 }
 
 .avatar {
-    width: 150rpx;
-    height: 150rpx;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    margin-bottom: 20rpx;
+    margin-bottom: 20px;
 }
 
-.login-btn {
-    margin-top: 40rpx;
-    width: 70%;
+.auth-btn {
+    margin-top: 30px;
+    width: 200px;
     background-color: #07c160;
     color: white;
 }
