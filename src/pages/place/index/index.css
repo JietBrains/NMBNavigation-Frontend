@@ -140,4 +140,32 @@
   max-height: 500rpx;
 }
 
+.popup-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.swiper-demo {
+  position: relative;
+}
+
+.swiper-btns {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+}
+
+.swiper-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 /*# sourceMappingURL=index.css.map */
