@@ -87,14 +87,15 @@
 
 <script setup>
 import './index.scss'
-import Taro from "@tarojs/taro";
-import { ref } from "vue";
+import Taro, { useRouter } from "@tarojs/taro";
+import {onMounted, ref} from "vue";
 import photo from '/src/assets/A1.jpg'
 import collectIcon from 'src/assets/icons/收藏.png'
 import wayIcon from 'src/assets/icons/导航.png'
 import message from 'src/assets/icons/聊天.png'
 import { Star, Message, Left, Right } from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
+
 
 
 const params = Taro.getCurrentInstance().router?.params
@@ -192,10 +193,18 @@ const cancel = () => {
   inputValue.value = ''
 }
 
+const end = ref('')
+onMounted(() => {
+  const instance = Taro.getCurrentInstance()
+  const params = instance?.router?.params || {}
+  end.value = params.name || ''
+  console.log('收到参数 end:', end.value)
+})
+
 const confirm = () => {
   showInput.value = false
   Taro.navigateTo({
-    url: `/pages/navigation/index/index?name=${keyword.value}&start=${inputValue.value}`,
+    url: `/pages/navigation/index/index?start=${inputValue.value}&end=${end.value}`,
   })
 }
 
