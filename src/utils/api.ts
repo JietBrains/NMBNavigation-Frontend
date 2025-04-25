@@ -2,7 +2,7 @@ import {get, post, del} from './apiConfig'
 
 // 首页查看各地点图片
 const viewAllPhotoOnMainPage = (data: any) => {
-    return get('/search/photo', data)
+    return get('/images/view', data)
 }
 
 //搜索一个地点的图片和信息
