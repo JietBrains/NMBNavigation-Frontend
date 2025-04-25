@@ -22,7 +22,7 @@
             size="large" :desc="comment.time">
             <template #icon>
               <nut-avatar size="normal">
-                <image :src = "comment.avatar" />
+                <image :src="comment.avatar" />
               </nut-avatar>
             </template>
           </nut-cell>
@@ -48,17 +48,32 @@
       <view class="place-name">{{ selectedPlace.name }}</view>
       <view class="place-desc">{{ selectedPlace.description }}</view>
       <view class="actions">
-        <image src = "/assets/icons/聊天.png" class="icon"/>
-        <button class="action-button" open-type="collect">
-          <image src="/assets/icons/收藏.png" class="icon"/>
+        <nut-button shape="round" type="default" size="normal" @click="onClickComment">
+          <template #icon>
+            <Message />
+          </template>
+          评论
+        </nut-button>
+        <nut-button shape="round" type="default" size="normal" @click="onCollect">
+          <template #icon>
+            <Star />
+          </template>
           收藏
-        </button>
-        <button class="action-button" bindtap="navigateToLocation" @tap="navigateToPlace">
-          <image src="/assets/icons/导航.png" class="icon"/>
+        </nut-button>
+        <nut-button shape="round" type="primary" size="normal" @click="navigateToPlace">
+          <template #icon>
+            <image src="/assets/icons/导航.png" class="icon"/>
+          </template>
           去这里
-        </button>
+        </nut-button>
       </view>
     </view>
+    <nut-popup v-model:visible="showPopup" position="bottom" @opened="handleOpened">
+      <nut-textarea v-model="textareaValue" :limit-show="true" :max-length="25" placeholder="请输入评论" />
+      <view class="popup-buttons">
+        <nut-button type="primary" size ='normal' @click="OnCommitComment">提交</nut-button>
+      </view>
+    </nut-popup>
   </view>
 </template>
 
@@ -70,45 +85,21 @@ import photo from '/src/assets/A1.jpg'
 import collectIcon from 'src/assets/icons/收藏.png'
 import wayIcon from 'src/assets/icons/导航.png'
 import message from 'src/assets/icons/聊天.png'
+import { Star, Message } from '@nutui/icons-vue-taro'
 
 
 const params = Taro.getCurrentInstance().router?.params
 console.log(params?.name)
-
-const onSearch = () => {
-  Taro.navigateTo({
-    url: '/pages/history/index/index',
-  })
-}
 
 const images = ref([
   '/assets/A1.jpg',
   '/assets/icons/导航.png',
   '/assets/icons/收藏.png',
 ])
-
-const selectedPlace = { name: '咖啡店', description: '提供咖啡、甜点和休闲环境。' }
-
-const navigateToPlace = () => {
-  showInput.value = true
-}
-
-
 const showInput = ref(false)
 const inputValue = ref('')
-
-const cancel = () => {
-  showInput.value = false
-  inputValue.value = ''
-}
-
-const confirm = () => {
-  showInput.value = false
-  Taro.navigateTo({
-    url: `/pages/navigation/index/index?name=${keyword.value}&start=${inputValue.value}`,
-  })
-}
-
+const showPopup = ref(false)
+const textareaValue = ref('')
 const comments = ref([
   {
     user: '用户A',
@@ -147,6 +138,47 @@ const comments = ref([
     avatar: 'https://picsum.photos/200/202'
   }
 ]);
+
+const selectedPlace = { name: '咖啡店', description: '提供咖啡、甜点和休闲环境。' }
+
+const navigateToPlace = () => {
+  showInput.value = true
+}
+
+const OnCommitComment = () => {
+  if (textareaValue.value.trim() === '') {
+    Taro.showToast({
+      title: '评论内容不能为空',
+      icon: 'none',
+    })
+    return
+  }
+  // TODO: 提交评论到服务器
+}
+
+const onSearch = () => {
+  Taro.navigateTo({
+    url: '/pages/history/index/index',
+  })
+}
+
+const cancel = () => {
+  showInput.value = false
+  inputValue.value = ''
+}
+
+const confirm = () => {
+  showInput.value = false
+  Taro.navigateTo({
+    url: `/pages/navigation/index/index?name=${keyword.value}&start=${inputValue.value}`,
+  })
+}
+
+const onClickComment = () => {
+  showPopup.value = true
+}
+
+
 
 </script>
 
