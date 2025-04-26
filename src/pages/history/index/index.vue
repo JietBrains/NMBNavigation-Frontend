@@ -36,7 +36,7 @@ import find from 'src/assets/icons/搜索/搜索.png'
 import right from 'src/assets/icons/搜索/右转箭头.png'
 import deleteIcon from 'src/assets/icons/搜索/删除.png'
 import building from 'src/assets/building.json'
-import { loadSearchHistory, saveSearchHistory, clearSearchHistory } from 'src/api/search'
+import { loadSearchHistory, saveSearchHistory, clearSearchHistory } from 'src/utils/api.ts'
 
 const keyword = ref('')
 const history = ref([])
@@ -51,9 +51,6 @@ const STORAGE_KEY = 'search_records'
 onMounted(() => {
   hasLogin.value = Taro.getStorageSync('token') ? true : false
   if (hasLogin) {
-    const stored = Taro.getStorageSync(STORAGE_KEY) || []
-    history.value = stored
-  } else {
     loadSearchHistory().then(res => {
       if (res.code === 200) {
         history.value = res.data
@@ -66,6 +63,9 @@ onMounted(() => {
     }).catch(err => {
       console.error('Error loading search history:', err)
     })
+  } else {
+    const stored = Taro.getStorageSync(STORAGE_KEY) || []
+    history.value = stored
   }
   console.log('hasLogin', hasLogin.value)
 })
@@ -75,13 +75,10 @@ function onSearch() {
   const newItem = {
     name: keyword.value.trim(),
   }
-
   // 更新历史：去重 + 限制10条
   const list = history.value.filter(i => i.name !== newItem.name)
   history.value = [newItem, ...list].slice(0, 10)
   if (hasLogin) {
-    Taro.setStorageSync(STORAGE_KEY, history.value)
-  } else {
     saveSearchHistory({ 'data': newItem }).then(res => {
       if (res.code === 200) {
         console.log('搜索历史保存成功')
@@ -91,9 +88,9 @@ function onSearch() {
     }).catch(err => {
       console.error('Error saving search history:', err)
     })
-
+  } else {
+    Taro.setStorageSync(STORAGE_KEY, history.value)
   }
-
   Taro.navigateTo({
     url: `/pages/place/index/index?name=${keyword.value}`,
   })
@@ -111,8 +108,14 @@ function clearHistory() {
       content: '确定要清空历史记录吗？',
       success(res) {
         if (res.confirm) {
-          Taro.removeStorageSync(STORAGE_KEY)
-          history.value = []
+          clearSearchHistory().then(res => {
+            if (res.code === 200) {
+              history.value = []
+              console.log('清空成功')
+            }
+          }).catch(err => {
+            console.error('Error clearing search history:', err)
+          })
         }
       },
     })
@@ -122,14 +125,8 @@ function clearHistory() {
       content: '确定要清空历史记录吗？',
       success(res) {
         if (res.confirm) {
-          clearSearchHistory().then(res => {
-            if (res.code === 200) {
-              history.value = []
-              console.log('清空成功')
-            }
-          }).catch(err => {
-            console.error('Error clearing search history:', err)
-          })
+          Taro.removeStorageSync(STORAGE_KEY)
+          history.value = []
         }
       },
     })
