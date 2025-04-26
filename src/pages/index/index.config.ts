@@ -1,3 +1,5 @@
-export default {
-    navigationBarTitleText: '登录'
-}
+export default definePageConfig({
+    usingComponents: {
+      'my-login': '/components/login/index'
+    }
+  })
