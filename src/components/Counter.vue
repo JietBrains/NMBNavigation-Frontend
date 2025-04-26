@@ -7,6 +7,7 @@
     <view class="button" @tap="onAdd5">地点</view>
     <view class="button" @tap="onAdd6">导航</view>
     <view class="button" @tap="onAdd7">查找最近地址</view>
+    <view class="button" @tap="onAdd8">登录</view>
   </view>
 </template>
 
@@ -57,6 +58,12 @@ const onAdd6 = () => {
 const onAdd7 = () => {
   Taro.navigateTo({
     url: '/pages/findLatest/index/index',
+  })
+}
+
+const onAdd8 = () => {
+  Taro.navigateTo({
+    url: '/pages/login/index',
   })
 }
 
