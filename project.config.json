@@ -18,7 +18,9 @@
     "skylineRenderEnable": false,
     "packNpmRelationList": [],
     "ignoreUploadUnusedFiles": true,
-    "useCompilerPlugins": false
+    "useCompilerPlugins": false,
+    "coverView": false,
+    "showShadowRootInWxmlPanel": false
   },
   "compileType": "miniprogram",
   "libVersion": "3.8.0",
