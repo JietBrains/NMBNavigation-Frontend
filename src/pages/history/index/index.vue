@@ -79,6 +79,7 @@ function onSearch() {
   const list = history.value.filter(i => i.name !== newItem.name)
   history.value = [newItem, ...list].slice(0, 10)
   if (hasLogin) {
+    console.log('newItem', newItem)
     saveSearchHistory({ 'data': newItem }).then(res => {
       if (res.code === 200) {
         console.log('搜索历史保存成功')

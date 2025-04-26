@@ -122,7 +122,7 @@ const cascaderValue = ref([])
 const showPreview = ref(false)
 const currentIndex = ref(0)
 const isCollect = ref(false)
-const notLogin = ref(false)
+const hasLogin = ref(true)
 const comments = ref([]);
 
 const scrollViewHeight = ref(0)
@@ -132,6 +132,13 @@ const navigateToPlace = () => {
 }
 
 const OnCommitComment = () => {
+  if (!hasLogin.value) {
+    Taro.showToast({
+      title: '请先登录',
+      icon: 'none',
+    })
+    return
+  }
   if (textareaValue.value.trim() === '') {
     Taro.showToast({
       title: '评论内容不能为空',
@@ -145,16 +152,14 @@ const OnCommitComment = () => {
     images: [],
   }).then((res) => {
     console.log('uploadComment:', res)
-    if (res.code == '504') {
-      notLogin.value = true
-      return
+    if (res.code == 200) {
+      Taro.showToast({
+        title: '评论成功',
+        icon: 'success',
+      })
+      textareaValue.value = ''
+      showPopup.value = false
     }
-    Taro.showToast({
-      title: '评论成功',
-      icon: 'success',
-    })
-    textareaValue.value = ''
-    showPopup.value = false
   }).catch((err) => {
     console.error('Error:', err)
   })
@@ -168,11 +173,11 @@ const onSearch = () => {
 
 const cancel = () => {
   showInput.value = false
-  inputValue.value = ''
 }
 
 const end = ref('')
 onMounted(() => {
+  hasLogin.value = Taro.getStorageSync('token') ? true : false
   const instance = Taro.getCurrentInstance()
   const params = instance?.router?.params || {}
   end.value = params.name || ''
@@ -188,19 +193,21 @@ onMounted(() => {
       })
     }
   })
-
+  if (!hasLogin.value) {
+    isCollect.value = false
+    comments.value = []
+    return
+  }
   collectJudgement({
     name: end.value,
   }).then((res) => {
     console.log('collectJudgement:', res)
-    if (res.code == '504') {
-      notLogin.value = true
-      return
-    }
-    else if (res.data) {
-      isCollect.value = true
-    } else {
-      isCollect.value = false
+    if (res.code == 200) {
+      if (res.data) {
+        isCollect.value = true
+      } else {
+        isCollect.value = false
+      }
     }
   }).catch((err) => {
     console.error('Error:', err)
@@ -211,18 +218,15 @@ onMounted(() => {
     name: end.value,
   }).then((res) => {
     console.log('getComment:', res)
-    if (res.code == '504') {
-      notLogin.value = true
-      return
+    if (res.code == 200) {
+      if (res.data.comments) {
+        comments.value = res.data.comments.map(comment => comment.description)
+      }
+      else {
+        comments.value = []
+      }
     }
-    if (res.data.comments) {
-      comments.value = res.data.comments.map(comment => comment.description)
-    }
-    else {
-      comments.value = []
-    }
-})
-  .catch((err) => {
+  }).catch((err) => {
     console.error('Error:', err)
     comments.value = []
   })
@@ -237,7 +241,7 @@ const confirm = () => {
 }
 
 const onClickComment = () => {
-  if (notLogin.value) {
+  if (!hasLogin.value) {
     Taro.showToast({
       title: '请先登录',
       icon: 'none',
@@ -267,7 +271,7 @@ const swiperOnChange = (index) => {
 }
 
 const onCollect = () => {
-  if (notLogin.value) {
+  if (!hasLogin.value) {
     Taro.showToast({
       title: '请先登录',
       icon: 'none',
@@ -279,8 +283,7 @@ const onCollect = () => {
       name: end.value
     }).then((res) => {
       console.log('deleteCollection:', res)
-      if (res.code == '504') {
-        notLogin.value = true
+      if (!hasLogin.value) {
         return
       }
     }).catch((err) => {
@@ -295,10 +298,6 @@ const onCollect = () => {
       name: end.value,
     }).then((res) => {
       console.log('uploadCollection:', res)
-      if (res.code == '504') {
-        notLogin.value = true
-        return
-      }
     }).catch((err) => {
       console.error('Error:', err)
     })
