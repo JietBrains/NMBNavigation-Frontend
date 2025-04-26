@@ -31,6 +31,7 @@ onMounted(() => {
 // 拼接完整 URL
 // const base = "http://localhost:5173"
 const base = "http://8.140.200.27:8088"
+
 const fullUrl = ref()
 
 // ✅ 注意使用 encodeURIComponent 包装整个 URL
