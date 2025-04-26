@@ -7,7 +7,7 @@
       </template>
     </nut-searchbar>
 
-    <scroll-view scroll-y="true" class="scroll-area">
+    <scroll-view :style="{ height: scrollViewHeight + 'px' }" scroll-y="true" class="scroll-area">
       <view class="swiper-demo">
         <nut-swiper ref="swiperRef" pagination-visible pagination-color="#FF0000" @change="swiperOnChange"
           @click="showFn">
@@ -25,7 +25,7 @@
         </view>
       </view>
 
-      <view class=comment-section>
+      <view class="comment-section">
         <nut-cell-group title="用户评论">
           <nut-cell v-for="(comment, index) in comments" :key="index" :title="comment.user" :sub-title="comment.content"
             size="large" :desc="comment.time">
@@ -39,8 +39,6 @@
       </view>
 
     </scroll-view>
-
-
 
     <view v-if="showInput" class="modal-mask">
       <view class="modal-content">
@@ -97,8 +95,6 @@ import wayIcon from 'src/assets/icons/导航.png'
 import message from 'src/assets/icons/聊天.png'
 import { Star, Message, Left, Right, Search2 } from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
-
-
 
 const params = Taro.getCurrentInstance().router?.params
 console.log(params?.name)
@@ -168,6 +164,7 @@ const comments = ref([
   }
 ]);
 
+const scrollViewHeight = ref(0)
 
 const navigateToPlace = () => {
   showInput.value = true
@@ -201,6 +198,17 @@ onMounted(() => {
   const params = instance?.router?.params || {}
   end.value = params.name || ''
   console.log('收到参数 end:', end.value)
+
+  Taro.getSystemInfo({
+    success: (res) => {
+      const query = Taro.createSelectorQuery()
+      query.select('.place-card').boundingClientRect()
+      query.exec((rects) => {
+        const placeCardHeight = rects[0]?.height || 0
+        scrollViewHeight.value = res.windowHeight - placeCardHeight
+      })
+    }
+  })
 })
 
 const confirm = () => {
@@ -233,9 +241,10 @@ const showFn = (index) => {
 const swiperOnChange = (index) => {
   currentIndex.value = index
 }
-
 </script>
 
-
 <style lang="scss">
-@import './index'; // 如果你写在外部文件中</style>
+@import './index'; // 如果你写在外部文件中
+
+
+</style>    
