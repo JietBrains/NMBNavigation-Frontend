@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import Taro from '@tarojs/taro'
 import './index.scss'
 
@@ -19,12 +19,12 @@ const status = ref()
 
 onMounted(() => {
   const instance = Taro.getCurrentInstance()
-  const params = instance?.router?.params || {}
+  const params = (instance && instance.router && instance.router.params) || {};
   start.value = params.start || ''
   end.value = params.end || ''
   status.value = params.status || ''
-  fullUrl.value=base+"?start="+start.value+"&end="+end.value+"&status="+status.value
-  webviewSrc.value=encodeURI(fullUrl.value);
+  fullUrl.value = base + "?start=" + start.value + "&end=" + end.value + "&status=" + status.value
+  webviewSrc.value = encodeURI(fullUrl.value);
   console.log(webviewSrc.value)
 })
 
