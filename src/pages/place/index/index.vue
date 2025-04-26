@@ -87,7 +87,7 @@
     <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置"
       :options="options"></nut-cascader>
   </view>
-    <Tabbar></Tabbar>
+  <Tabbar></Tabbar>
 </template>
 
 <script setup>
@@ -181,7 +181,7 @@ const end = ref('')
 onMounted(() => {
   hasLogin.value = Taro.getStorageSync('token') ? true : false
   const instance = Taro.getCurrentInstance()
-const params = (instance && instance.router && instance.router.params) || {};
+  const params = (instance && instance.router && instance.router.params) || {};
   end.value = params.name || ''
   console.log('收到参数 end:', end.value)
 
@@ -189,9 +189,11 @@ const params = (instance && instance.router && instance.router.params) || {};
     success: (res) => {
       const query = Taro.createSelectorQuery()
       query.select('.place-card').boundingClientRect()
+      query.select('.Tabbar').boundingClientRect()
       query.exec((rects) => {
         const placeCardHeight = (rects[0] && rects[0].height) || 0
-        scrollViewHeight.value = res.windowHeight - placeCardHeight
+        const tabbarHeight = (rects[1] && rects[1].height) || 0
+        scrollViewHeight.value = res.windowHeight - placeCardHeight - tabbarHeight
       })
     }
   })
