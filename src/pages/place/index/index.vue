@@ -1,16 +1,17 @@
 <template>
   <nut-image-preview :show="showPreview" :images="imgList3" :init-no="currentIndex" @close="hideFn" />
   <view class="container">
-    <view class="search-bar" @tap="onSearch">
-      <image src="/assets/icons/搜索/搜索.png" class="icon" />
-      <input class="search-input" placeholder="搜索教室、厕所、售货机" />
-      <view class="search-btn">搜索</view>
-    </view>
+    <nut-searchbar disabled="true" @click="onSearch">
+      <template #rightin>
+        <Search2 />
+      </template>
+    </nut-searchbar>
 
     <scroll-view scroll-y="true" class="scroll-area">
       <view class="swiper-demo">
-        <nut-swiper ref="swiperRef" pagination-visible pagination-color="#FF0000" @change="swiperOnChange" @click="showFn">
-          <nut-swiper-item v-for="(item, index) in imgList" :key="index" style="height: 200px" >
+        <nut-swiper ref="swiperRef" pagination-visible pagination-color="#FF0000" @change="swiperOnChange"
+          @click="showFn">
+          <nut-swiper-item v-for="(item, index) in imgList" :key="index" style="height: 200px">
             <img :src="item" alt="" style="height: 100%; width: 100%" draggable="false" />
           </nut-swiper-item>
         </nut-swiper>
@@ -43,7 +44,7 @@
 
     <view v-if="showInput" class="modal-mask">
       <view class="modal-content">
-        <nut-cell title="选择地址" :desc="cascaderValue.toString() || '请选择地址'" @click="cascaderVisible = true" /> 
+        <nut-cell title="选择地址" :desc="cascaderValue.toString() || '请选择地址'" @click="cascaderVisible = true" />
         <view class="modal-buttons">
           <nut-button @click="cancel">取消</nut-button>
           <nut-button type="primary" @click="confirm">确认</nut-button>
@@ -81,19 +82,20 @@
         <nut-button type="primary" size='normal' @click="OnCommitComment">提交</nut-button>
       </view>
     </nut-popup>
-    <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置" :options="options"></nut-cascader>
+    <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置"
+      :options="options"></nut-cascader>
   </view>
 </template>
 
 <script setup>
 import './index.scss'
 import Taro, { useRouter } from "@tarojs/taro";
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import photo from '/src/assets/A1.jpg'
 import collectIcon from 'src/assets/icons/收藏.png'
 import wayIcon from 'src/assets/icons/导航.png'
 import message from 'src/assets/icons/聊天.png'
-import { Star, Message, Left, Right } from '@nutui/icons-vue-taro'
+import { Star, Message, Left, Right, Search2 } from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
 
 
@@ -229,7 +231,7 @@ const showFn = (index) => {
 }
 
 const swiperOnChange = (index) => {
-  currentIndex.value = index + 1
+  currentIndex.value = index
 }
 
 </script>
