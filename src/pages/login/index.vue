@@ -127,7 +127,30 @@ const handleWechatLogin = async () => {
     let res = await Taro.login()
     console.log('微信登录成功:', res)
     // console.log('微信登录 code:', code)
-
+    login({
+      'username': username.value,
+      'password': password.value,
+      'nickname': userProfile.userInfo.nickName,
+      'avatarurl': userProfile.userInfo.avatarUrl
+    }).then((res) => {
+      console.log('res:', res)
+      if (res.code === 200) {
+        Taro.setStorageSync('token', res.data.token)
+        Taro.showToast({
+          title: '登录成功',
+          icon: 'success',
+          duration: 2000
+        })
+      } else {
+        Taro.showToast({
+          title: '登录失败',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    }).catch((err) => {
+      console.error('登录失败:', err)
+    })
     console.log('微信登录')
   } catch (error) {
     console.error('微信登录失败:', error)
