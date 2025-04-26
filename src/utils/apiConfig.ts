@@ -1,15 +1,5 @@
 import Taro from '@tarojs/taro';
 
-// 定义基础的请求配置
-const baseConfig = {
-    baseUrl: process.env.USE_MOCK? process.env.API_MOCK_URL : process.env.API_BASE_URL, // API 基础 URL
-    timeout: 10000, // 请求超时时间，单位为毫秒
-    header: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${Taro.getStorageSync('token')}`, // 从本地存储中获取 token
-    }
-};
-
 type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 // 定义请求函数
@@ -25,6 +15,14 @@ function request({
     header?: Record<string, string>;
 }) {
     return new Promise((resolve, reject) => {
+        const baseConfig = {
+            baseUrl: process.env.USE_MOCK ? process.env.API_MOCK_URL : process.env.API_BASE_URL, // API 基础 URL
+            timeout: 10000, // 请求超时时间，单位为毫秒
+            header: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${Taro.getStorageSync('token')}`, // 从本地存储中获取 token
+            }
+        };
         Taro.request({
             url: baseConfig.baseUrl + url,
             method: methodParam,
@@ -53,8 +51,8 @@ function request({
 // 辅助函数：将对象转换为查询字符串
 function objectToQueryString(obj: Record<string, any>) {
     return Object.entries(obj)
-      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-      .join('&');
+        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+        .join('&');
 }
 
 
