@@ -7,6 +7,8 @@
         v-model="keyword"
         placeholder="搜索教室、厕所、售货机"
         @confirm="onSearch"
+        disabled="true"
+        @tap="cascaderVisible = true"
       />
       <view class="search-btn" @tap="onSearch">搜索</view>
     </view>
@@ -35,6 +37,8 @@
         清空历史记录
       </view>
     </view>
+    <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置"
+      :options="options" @change="onCascaderChange"></nut-cascader>
   </view>
 </template>
 
@@ -45,9 +49,13 @@ import clock from 'src/assets/icons/搜索/时钟.png'
 import find from 'src/assets/icons/搜索/搜索.png'
 import right from 'src/assets/icons/搜索/右转箭头.png'
 import deleteIcon from 'src/assets/icons/搜索/删除.png'
+import building from 'src/assets/building.json'
 
 const keyword = ref('')
 const history = ref([])
+const options = ref(building)
+const cascaderVisible = ref(false)
+const cascaderValue = ref([])
 
 const STORAGE_KEY = 'search_records'
 
@@ -81,6 +89,12 @@ function selectHistory(item) {
 function clearHistory() {
   Taro.removeStorageSync(STORAGE_KEY)
   history.value = []
+}
+
+function onCascaderChange(value) {
+  if (value.length > 2) {
+    keyword.value = value[2]
+  }
 }
 </script>
 
