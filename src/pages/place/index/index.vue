@@ -139,6 +139,9 @@ const OnCommitComment = () => {
       title: '请先登录',
       icon: 'none',
     })
+    Taro.navigateTo({
+      url: '/pages/login/index/index',
+    })
     return
   }
   if (textareaValue.value.trim() === '') {
@@ -146,7 +149,7 @@ const OnCommitComment = () => {
       title: '评论内容不能为空',
       icon: 'none',
     })
-    return
+    
   }
   uploadComment({
     name: end.value,
@@ -279,6 +282,9 @@ const onCollect = () => {
     Taro.showToast({
       title: '请先登录',
       icon: 'none',
+    })
+    Taro.navigateTo({
+      url: '/pages/login/index/index',
     })
     return
   }
