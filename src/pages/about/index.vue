@@ -119,13 +119,42 @@ const getUserProfile = () => {
 }
 
 const handleWechatLogin = async () => {
-    try {
-        const { code } = await wx.login()
-        console.log('微信登录 code:', code)
+    console.log('开始登录，发送用户信息到后端',  userProfile.userInfo.nickName, userProfile.userInfo.avatarUrl )
 
-        console.log('微信登录')
+    try {
+        const res = await Taro.request({
+            url: 'https://your-backend.com/api/login', // 👈 换成你自己的后端接口
+            method: 'POST',
+            data: {
+                username,
+                password,
+                userProfile.userInfo.nickName, 
+                userProfile.userInfo.avatarUrl,
+            },
+            header: {
+                'Content-Type': 'application/json',
+            },
+        })
+
+        if (res.statusCode === 200) {
+            console.log('登录成功', res.data)
+            Taro.showToast({
+                title: '登录成功',
+                icon: 'success',
+            })
+        } else {
+            console.error('登录失败', res)
+            Taro.showToast({
+                title: '登录失败',
+                icon: 'none',
+            })
+        }
     } catch (error) {
-        console.error('微信登录失败:', error)
+        console.error('请求异常', error)
+        Taro.showToast({
+            title: '网络错误',
+            icon: 'none',
+        })
     }
 }
 
