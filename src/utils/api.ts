@@ -76,7 +76,10 @@ const loadSearchHistory = (data: any) => {
 // 清空本用户的历史记录
 const clearSearchHistory = (data: any) => {
     return del('/search/delete', data)
+}
 
+const login = (data: any) => {
+    return post('/user/login', data)
 }
 
 export {
@@ -93,5 +96,7 @@ export {
     collectJudgement,
     topCollection,
     saveSearchHistory,
-    loadSearchHistory
+    loadSearchHistory,
+    clearSearchHistory,
+    login
 }

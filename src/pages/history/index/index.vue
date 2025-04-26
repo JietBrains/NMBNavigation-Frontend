@@ -36,6 +36,7 @@ import find from 'src/assets/icons/搜索/搜索.png'
 import right from 'src/assets/icons/搜索/右转箭头.png'
 import deleteIcon from 'src/assets/icons/搜索/删除.png'
 import building from 'src/assets/building.json'
+import { loadSearchHistory, saveSearchHistory, clearSearchHistory } from 'src/api/search'
 
 const keyword = ref('')
 const history = ref([])
