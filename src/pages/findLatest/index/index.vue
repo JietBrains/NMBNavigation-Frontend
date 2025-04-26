@@ -27,7 +27,6 @@
       </view>
     </view>
   </view>
-
   <Tabbar></Tabbar>
 </template>
 
