@@ -2,40 +2,32 @@
   <view class="container">
     <!-- 顶部分类 tab -->
     <view class="tab-bar">
-      <view
-        v-for="tab in tabs"
-        :key="tab"
-        :class="['tab-item', currentTab === tab ? 'active' : '']"
-        @tap="selectTab(tab)"
-      >
+      <view v-for="tab in tabs" :key="tab" :class="['tab-item', currentTab === tab ? 'active' : '']"
+        @tap="selectTab(tab)">
         {{ tab }}
       </view>
     </view>
 
     <!-- 收藏列表 -->
     <view class="fav-list">
-      <view
-        v-for="item in filteredList"
-        :key="item.id"
-        class="fav-item"
-        @tap="goToLocation(item)"
-      >
-       <image src="/assets/icons/收藏 (已收藏).png" class="icon"/>
+      <view v-for="item in filteredList" :key="item.id" class="fav-item" @tap="goToLocation(item)">
+        <image src="/assets/icons/收藏 (已收藏).png" class="icon" />
         <view class="info">
           <view class="line">
             {{ item.floor }}　{{ item.building }}　{{ item.name }}
           </view>
         </view>
-        <image src="/assets/icons/设置.png" class="icon"  @tap.stop="onChange"/>
+        <image src="/assets/icons/设置.png" class="icon" @tap.stop="onChange" />
       </view>
     </view>
 
 
-
   </view>
+  <Tabbar></Tabbar>
 </template>
 
 <script setup>
+import Tabbar from '../../../components/Tabbar.vue'
 import { ref, computed } from 'vue'
 import Taro from '@tarojs/taro'
 import collectIcon from 'src/assets/icons/收藏 (已收藏).png'
@@ -66,29 +58,28 @@ function goToLocation(item) {
   })
 }
 
-const changeItem=ref(false);
-const onChange=()=>{
-Taro.showActionSheet({
-  itemList: [
-    '置顶',
-    //'前往该地点',
-    '删除该地点',
-  ],
-  success(res) {
-    if(res.tapIndex==="置顶"){
+const changeItem = ref(false);
+const onChange = () => {
+  Taro.showActionSheet({
+    itemList: [
+      '置顶',
+      //'前往该地点',
+      '删除该地点',
+    ],
+    success(res) {
+      if (res.tapIndex === "置顶") {
         //todo
-    }else if(res.tapIndex==="删除该地点"){
+      } else if (res.tapIndex === "删除该地点") {
         //todo
+      }
+    },
+    fail(err) {
+      console.log('取消或出错', err)
     }
-  },
-  fail(err) {
-    console.log('取消或出错', err)
-  }
-})
+  })
 }
 </script>
 
 <style lang="scss">
 @import './index'; // 如果你写在外部文件中
-
 </style>
