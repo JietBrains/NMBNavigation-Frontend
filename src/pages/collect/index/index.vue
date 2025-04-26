@@ -16,7 +16,7 @@
       </view>
     </view>
   </view>
-  <Tabbar></Tabbar>
+  <Tabbar :count="2"></Tabbar>
 </template>
 
 <script setup>
@@ -25,6 +25,7 @@ import Taro from '@tarojs/taro'
 import collectIcon from 'src/assets/icons/收藏 (已收藏).png'
 import change from 'src/assets/icons/设置.png'
 import { getAllCollection, topCollection, deleteCollection } from 'src/utils/api.ts'
+import Tabbar from '../../../components/Tabbar.vue'
 
 // 收藏数据
 const allItems = ref([])

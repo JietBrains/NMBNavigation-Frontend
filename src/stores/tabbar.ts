@@ -2,16 +2,16 @@ import { defineStore } from 'pinia'
 
 const useTabbarStore = defineStore('tabbar', {
     state: () => ({
-        tabbarSelectedName: "index",
+        index: 0,
     }),
     actions: {
-        setTabbarSelectedName(name) {
-            this.tabbarSelectedName = name
+        setIndex(index:number) {
+            this.index = index
         }
     },
     getters: {
-        getTabbarSelectedName() {
-            return this.tabbarSelectedName
+        getIndex() {
+            return this.index
         }
     }
 }

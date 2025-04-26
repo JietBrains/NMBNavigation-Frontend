@@ -48,7 +48,7 @@
       </view>
     </view>
   </view>
-    <Tabbar></Tabbar>
+    <Tabbar :count="3"></Tabbar>
 </template>
 
 <script lang="ts" setup>
