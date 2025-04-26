@@ -41,7 +41,7 @@ const tabSwitch = (item: Record<string, unknown>, index: number) => {
     } else if (index == 3) {
         Taro.navigateTo({ url: '/pages/login/index' })
     }
-    active.value=index
+
 }
 
 </script>
