@@ -25,12 +25,23 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
+import Taro from '@tarojs/taro'
 import { Home, Category, Find, My } from '@nutui/icons-vue-taro'
 
 const active = ref(0)
 
 const tabSwitch = (item: Record<string, unknown>, index: number) => {
     console.log(item, index)
+    if (index == 0) { // 地图
+        Taro.navigateTo({ url: '/pages/place/index/index' })
+    } else if (index == 1) {
+        Taro.navigateTo({ url: '/pages/find/index/index' })
+    } else if (index == 2) {
+        console.log('收藏')
+        Taro.navigateTo({ url: '/pages/collect/index/index' })
+    } else if (index == 3) {
+        Taro.navigateTo({ url: '/pages/about/index/index' })
+    }
 }
 
 </script>

@@ -16,6 +16,7 @@
       </view>
     </view>
   </view>
+  <Tabbar></Tabbar>
 </template>
 
 <script setup>
@@ -110,4 +111,5 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-@import './index'; // 如果你写在外部文件中</style>
+@import './index'; // 如果你写在外部文件中
+</style>
