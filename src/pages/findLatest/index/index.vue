@@ -27,7 +27,7 @@
       </view>
     </view>
   </view>
-  <Tabbar></Tabbar>
+  <Tabbar :count="1"></Tabbar>
 </template>
 
 <script setup>
