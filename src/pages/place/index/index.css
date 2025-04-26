@@ -11,7 +11,7 @@
 
 .place-card {
   position: fixed;
-  bottom: 0;
+  bottom: 10%;
   left: 0;
   right: 0;
   background: white;

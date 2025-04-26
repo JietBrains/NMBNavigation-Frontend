@@ -26,6 +26,7 @@
     <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置" :options="options"
       @change="onCascaderChange"></nut-cascader>
   </view>
+    <Tabbar></Tabbar>
 </template>
 
 <script setup>
@@ -37,6 +38,7 @@ import right from 'src/assets/icons/搜索/右转箭头.png'
 import deleteIcon from 'src/assets/icons/搜索/删除.png'
 import building from 'src/assets/building.json'
 import { loadSearchHistory, saveSearchHistory, clearSearchHistory } from 'src/utils/api.ts'
+import Tabbar from '../../../components/Tabbar.vue'
 
 const keyword = ref('')
 const history = ref([])

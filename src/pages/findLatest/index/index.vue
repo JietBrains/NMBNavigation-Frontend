@@ -27,6 +27,8 @@
       </view>
     </view>
   </view>
+
+  <Tabbar></Tabbar>
 </template>
 
 <script setup>
@@ -34,7 +36,7 @@ import './index.scss'
 import {ref, onMounted, computed} from 'vue'
 import building from 'src/assets/building.json'
 import Taro from "@tarojs/taro";
-
+import Tabbar from '../../../components/Tabbar.vue'
 
 const keyword = ref('')
 const selectedImage = ref('')

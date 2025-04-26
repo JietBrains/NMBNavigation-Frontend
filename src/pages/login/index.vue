@@ -48,6 +48,7 @@
       </view>
     </view>
   </view>
+    <Tabbar></Tabbar>
 </template>
 
 <script lang="ts" setup>
@@ -55,6 +56,7 @@ import { reactive, ref, onMounted } from 'vue'
 import Taro from '@tarojs/taro'
 import { Find, Add, My } from '@nutui/icons-vue-taro'
 import { login } from 'src/utils/api.ts'
+import Tabbar from '../../components/Tabbar.vue'
 
 interface UserInfo {
   avatarUrl: string

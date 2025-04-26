@@ -1,18 +1,18 @@
 <template>
-  <nut-image-preview :show="showPreview" :images="swiperList" :init-no="currentIndex" @close="hideFn" />
+  <nut-image-preview :show="showPreview" :images="swiperList" :init-no="currentIndex" @close="hideFn"/>
   <view class="container">
     <nut-searchbar disabled="true" @click="onSearch">
       <template #rightin>
-        <Search2 />
+        <Search2/>
       </template>
     </nut-searchbar>
 
     <scroll-view :style="{ height: scrollViewHeight + 'px' }" scroll-y="true" class="scroll-area">
       <view class="swiper-demo">
         <nut-swiper ref="swiperRef" pagination-visible pagination-color="#FF0000" @change="swiperOnChange"
-          @click="showFn">
+                    @click="showFn">
           <nut-swiper-item v-for="(item, index) in imgList" :key="index" style="height: 200px">
-            <img :src="item" alt="" style="height: 100%; width: 100%" draggable="false" />
+            <img :src="item" alt="" style="height: 100%; width: 100%" draggable="false"/>
           </nut-swiper-item>
         </nut-swiper>
         <view class="swiper-btns">
@@ -28,10 +28,10 @@
       <view class="comment-section">
         <nut-cell-group title="用户评论">
           <nut-cell v-for="(comment, index) in comments" :key="index" :title="comment.user" :sub-title="comment.content"
-            size="large" :desc="comment.time">
+                    size="large" :desc="comment.time">
             <template #icon>
               <nut-avatar size="small">
-                <image :src="comment.avatar" />
+                <image :src="comment.avatar"/>
               </nut-avatar>
             </template>
           </nut-cell>
@@ -42,7 +42,8 @@
 
     <view v-if="showInput" class="modal-mask">
       <view class="modal-content">
-        <nut-cell title="请选择您的当前地址" :desc="cascaderValue.toString() || '当前地址'" @click="cascaderVisible = true" />
+        <nut-cell title="请选择您的当前地址" :desc="cascaderValue.toString() || '当前地址'"
+                  @click="cascaderVisible = true"/>
         <view class="modal-buttons">
           <nut-button @click="cancel">取消</nut-button>
           <nut-button type="primary" @click="confirm">确认</nut-button>
@@ -55,53 +56,56 @@
       <view class="actions">
         <nut-button shape="round" type="default" size="normal" @click="onClickComment">
           <template #icon>
-            <Message />
+            <Message/>
           </template>
           评论
         </nut-button>
         <nut-button shape="round" type="default" size="normal" @click="onCollect">
           <template #icon>
             <view v-if="isCollect">
-              <image src="/assets/icons/收藏 (已收藏).png" class="icon" />
+              <image src="/assets/icons/收藏 (已收藏).png" class="icon"/>
             </view>
             <view v-else>
-              <image src="/assets/icons/收藏.png" class="icon" />
+              <image src="/assets/icons/收藏.png" class="icon"/>
             </view>
           </template>
           收藏
         </nut-button>
         <nut-button shape="round" type="primary" size="normal" @click="navigateToPlace">
           <template #icon>
-            <image src="/assets/icons/导航.png" class="icon" />
+            <image src="/assets/icons/导航.png" class="icon"/>
           </template>
           去这里
         </nut-button>
       </view>
     </view>
     <nut-popup v-model:visible="showPopup" position="bottom">
-      <nut-textarea v-model="textareaValue" :limit-show="true" :max-length="25" placeholder="请输入评论" />
+      <nut-textarea v-model="textareaValue" :limit-show="true" :max-length="25" placeholder="请输入评论"/>
       <view class="popup-buttons">
         <nut-button type="primary" size='normal' @click="OnCommitComment">提交</nut-button>
       </view>
     </nut-popup>
     <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置"
-      :options="options"></nut-cascader>
+                  :options="options"></nut-cascader>
   </view>
+    <Tabbar></Tabbar>
 </template>
 
 <script setup>
 import './index.scss'
-import Taro, { useRouter } from "@tarojs/taro";
-import { onMounted, ref } from "vue";
+import Taro, {useRouter} from "@tarojs/taro";
+import {onMounted, ref} from "vue";
 import photo from '/src/assets/A1.jpg'
 import collectIcon from 'src/assets/icons/收藏.png'
 import hasCollectIcon from 'src/assets/icons/收藏 (已收藏).png'
 import wayIcon from 'src/assets/icons/导航.png'
 import message from 'src/assets/icons/聊天.png'
-import { Message, Left, Right, Search2 } from '@nutui/icons-vue-taro'
+import {Message, Left, Right, Search2} from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
-import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment } from 'src/utils/api.ts'
-import { comment } from 'postcss';
+import {collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment} from 'src/utils/api.ts'
+import {comment} from 'postcss';
+import Tabbar from '../../../components/Tabbar.vue'
+
 
 // const params = Taro.getCurrentInstance().router?.params
 
@@ -111,7 +115,7 @@ const imgList = ref([
   '/assets/icons/导航.png',
   '/assets/icons/收藏.png',
 ])
-const swiperList = ref(imgList.value.map(url => ({ src: url })))
+const swiperList = ref(imgList.value.map(url => ({src: url})))
 const showInput = ref(false)
 const showPopup = ref(false)
 const textareaValue = ref('')
@@ -174,7 +178,7 @@ const cancel = () => {
 const end = ref('')
 onMounted(() => {
   const instance = Taro.getCurrentInstance()
-const params = (instance && instance.router && instance.router.params) || {};
+  const params = (instance && instance.router && instance.router.params) || {};
   end.value = params.name || ''
   console.log('收到参数 end:', end.value)
 
@@ -196,8 +200,7 @@ const params = (instance && instance.router && instance.router.params) || {};
     if (res.code == '504') {
       notLogin.value = true
       return
-    }
-    else if (res.data) {
+    } else if (res.data) {
       isCollect.value = true
     } else {
       isCollect.value = false
@@ -217,15 +220,14 @@ const params = (instance && instance.router && instance.router.params) || {};
     }
     if (res.data.comments) {
       comments.value = res.data.comments.map(comment => comment.description)
-    }
-    else {
+    } else {
       comments.value = []
     }
-})
-  .catch((err) => {
-    console.error('Error:', err)
-    comments.value = []
   })
+    .catch((err) => {
+      console.error('Error:', err)
+      comments.value = []
+    })
 })
 
 const confirm = () => {

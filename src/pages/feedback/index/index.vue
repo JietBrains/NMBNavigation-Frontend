@@ -48,12 +48,14 @@
       <nut-button type="primary" size="large" @click="submit">提交</nut-button>
     </view>
   </view>
+    <Tabbar></Tabbar>
 </template>
 
 <script setup>
 import Taro from '@tarojs/taro'
 import { ref } from 'vue'
 import style from './index.css'
+import Tabbar from '../../../components/Tabbar.vue'
 
 const description = ref('')
 const phone = ref('')

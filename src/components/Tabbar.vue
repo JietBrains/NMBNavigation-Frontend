@@ -33,15 +33,15 @@ const active = ref(0)
 const tabSwitch = (item: Record<string, unknown>, index: number) => {
     console.log(item, index)
     if (index == 0) { // 地图
-        Taro.navigateTo({ url: '/pages/place/index/index' })
+        Taro.navigateTo({ url: '/pages/map/index/index' })
     } else if (index == 1) {
-        Taro.navigateTo({ url: '/pages/find/index/index' })
+        Taro.navigateTo({ url: '/pages/findLatest/index/index' })
     } else if (index == 2) {
-        console.log('收藏')
         Taro.navigateTo({ url: '/pages/collect/index/index' })
     } else if (index == 3) {
-        Taro.navigateTo({ url: '/pages/about/index/index' })
+        Taro.navigateTo({ url: '/pages/login/index' })
     }
+    active.value=index
 }
 
 </script>
