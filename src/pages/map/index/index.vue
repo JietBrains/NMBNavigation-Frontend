@@ -78,6 +78,7 @@ import Taro from '@tarojs/taro'
 import photo from '/src/assets/A1.jpg'
 import collectIcon from 'src/assets/icons/收藏.png'
 import wayIcon from 'src/assets/icons/导航.png'
+import building from 'src/assets/building.json'
 
 
 
@@ -110,13 +111,7 @@ const handleMessageFromWeb = (e) => {
 
 
 const floors = ref(['1F', '2F', '3F', '4F', '5F'])
-const buildings = {
-  '1F': ['A座', 'B座', 'C座'],
-  '2F': ['D座', 'E座'],
-  '3F': ['F座', 'G座', 'H座', 'I座', 'J座', 'K座'],
-  '4F': ['L座', 'M座'],
-  '5F': ['N座', 'O座']
-}
+const buildings = ref(building)
 
 
 const selectedFloor = ref(null)
