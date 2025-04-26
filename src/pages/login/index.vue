@@ -41,25 +41,13 @@
           </nut-button>
 
           <nut-button type="primary" plain block @click="handleWechatLogin">
-            使用微信登录
+            登录
           </nut-button>
         </nut-space>
 
       </view>
     </view>
   </view>
-  <!-- <view class="container">
-    <view class="userinfo">
-      <template v-if="!hasUserInfo">
-        <button v-if="canIUseGetUserProfile" @tap="getUserProfile">获取头像昵称</button>
-        <button v-else open-type="getUserInfo" @getuserinfo="getUserInfo">获取头像昵称</button>
-      </template>
-      <template v-else>
-        <image class="userinfo-avatar" :src="userProfile.userInfo.avatarUrl" mode="cover" @tap="bindViewTap" />
-        <text class="userinfo-nickname">{{ userProfile.userInfo.nickName }}</text>
-      </template>
-    </view>
-  </view> -->
 </template>
 
 <script lang="ts" setup>
