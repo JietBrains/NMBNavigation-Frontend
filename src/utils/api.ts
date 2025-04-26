@@ -63,6 +63,21 @@ const topCollection = (data: any) => {
     return post('/collect/top', data)
 }
 
+// 搜索保存历史记录
+const saveSearchHistory = (data: any) => {
+    return post('/search/save', data)
+}
+
+// 获取当前用户的搜索记录
+const loadSearchHistory = (data: any) => {
+    return get('/search/get', data)
+}
+
+// 清空本用户的历史记录
+const clearSearchHistory = (data: any) => {
+    return del('/search/delete', data)
+
+}
 
 export {
     viewAllPhotoOnMainPage,
@@ -76,5 +91,7 @@ export {
     uploadComment,
     getComment,
     collectJudgement,
-    topCollection
+    topCollection,
+    saveSearchHistory,
+    loadSearchHistory
 }
