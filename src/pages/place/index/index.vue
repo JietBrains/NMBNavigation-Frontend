@@ -118,10 +118,15 @@ const imgList3 = ref([
   }
 ])
 const showInput = ref(false)
-const inputValue = ref('')
 const showPopup = ref(false)
 const textareaValue = ref('')
 const cascaderVisible = ref(false)
+const swiperRef = ref()
+const selectedPlace = { name: '咖啡店', description: '提供咖啡、甜点和休闲环境。' }
+const options = ref(building)
+const cascaderValue = ref([])
+const showPreview = ref(false)
+const currentIndex = ref(0)
 const comments = ref([
   {
     user: '用户A',
@@ -160,12 +165,7 @@ const comments = ref([
     avatar: 'https://picsum.photos/200/202'
   }
 ]);
-const swiperRef = ref()
-const selectedPlace = { name: '咖啡店', description: '提供咖啡、甜点和休闲环境。' }
-const options = ref(building)
-const cascaderValue = ref([])
-const showPreview = ref(false)
-const currentIndex = ref(0)
+
 
 const navigateToPlace = () => {
   showInput.value = true
@@ -203,8 +203,9 @@ onMounted(() => {
 
 const confirm = () => {
   showInput.value = false
+  console.log('选择的地址:', cascaderValue.value[2])
   Taro.navigateTo({
-    url: `/pages/navigation/index/index?start=${inputValue.value}&end=${end.value}`,
+    url: `/pages/navigation/index/index?start=${cascaderValue.value[2]}&end=${end.value}`,
   })
 }
 
