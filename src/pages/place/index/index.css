@@ -1,27 +1,6 @@
+@charset "UTF-8";
 .container {
   padding: 20px;
-}
-
-.search-bar {
-  display: flex;
-  align-items: center;
-  background: #f0f0f0;
-  padding: 10px;
-  border-radius: 20px;
-}
-
-.search-input {
-  flex: 1;
-  font-size: 30px;
-  padding: 8px;
-  border: none;
-  background: transparent;
-}
-
-.search-btn {
-  margin-left: 10px;
-  color: #007aff;
-  font-weight: bold;
 }
 
 .icon {
@@ -42,9 +21,16 @@
 }
 
 .place-name {
-  font-size: 32rpx;
+  /* 设置字体大小，单位 rpx 在小程序中可适配不同屏幕 */
+  font-size: 50rpx;
+  /* 设置字体颜色，这里是深灰色示例，可换成你喜欢的颜色值 */
+  color: #333333;
+  /* 设置字体粗细为加粗 */
   font-weight: bold;
-  margin-bottom: 8rpx;
+  /* 设置文本的行高，这里设置为和字体大小差不多的数值让文本看起来更美观，也可自行调整 */
+  line-height: 36rpx;
+  margin-left: 20rpx;
+  margin-bottom: 20rpx;
 }
 
 .place-desc {
@@ -137,7 +123,7 @@
 }
 
 .comment-section {
-  max-height: 500rpx;
+  max-height: 800rpx;
 }
 
 .popup-buttons {

@@ -103,8 +103,8 @@ import building from 'src/assets/building.json'
 import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment } from 'src/utils/api.ts'
 import { comment } from 'postcss';
 
-const params = Taro.getCurrentInstance().router?.params
-console.log(params?.name)
+// const params = Taro.getCurrentInstance().router?.params
+
 
 const imgList = ref([
   '/assets/A1.jpg',
@@ -174,7 +174,7 @@ const cancel = () => {
 const end = ref('')
 onMounted(() => {
   const instance = Taro.getCurrentInstance()
-  const params = instance?.router?.params || {}
+const params = (instance && instance.router && instance.router.params) || {};
   end.value = params.name || ''
   console.log('收到参数 end:', end.value)
 
@@ -183,7 +183,7 @@ onMounted(() => {
       const query = Taro.createSelectorQuery()
       query.select('.place-card').boundingClientRect()
       query.exec((rects) => {
-        const placeCardHeight = rects[0]?.height || 0
+        const placeCardHeight = (rects[0] && rects[0].height) || 0
         scrollViewHeight.value = res.windowHeight - placeCardHeight
       })
     }
@@ -248,10 +248,10 @@ const onClickComment = () => {
 }
 
 const handlePrev = () => {
-  swiperRef.value?.prev()
+  swiperRef.value && swiperRef.value.prev()
 }
 const handleNext = () => {
-  swiperRef.value?.next()
+  swiperRef.value && swiperRef.value.next()
 }
 
 const hideFn = () => {
