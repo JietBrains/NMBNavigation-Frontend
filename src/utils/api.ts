@@ -58,6 +58,10 @@ const getComment = (data: any) => {
 
 // TODO: 图片上传
 
+// 置顶收藏
+const topCollection = (data: any) => {
+    return post('/collect/top', data)
+}
 
 
 export {
@@ -71,5 +75,6 @@ export {
     deleteCollection,
     uploadComment,
     getComment,
-    collectJudgement
+    collectJudgement,
+    topCollection
 }
