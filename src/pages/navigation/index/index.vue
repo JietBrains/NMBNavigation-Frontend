@@ -15,14 +15,17 @@ import './index.scss'
 
 const start = ref()
 const end = ref()
+const status = ref()
 
 onMounted(() => {
   const instance = Taro.getCurrentInstance()
   const params = instance?.router?.params || {}
   start.value = params.start || ''
   end.value = params.end || ''
-  fullUrl.value=base+"?start="+start.value+"&end="+end.value
+  status.value = params.status || ''
+  fullUrl.value=base+"?start="+start.value+"&end="+end.value+"&status="+status.value
   webviewSrc.value=encodeURI(fullUrl.value);
+  console.log(webviewSrc.value)
 })
 
 // 拼接完整 URL
