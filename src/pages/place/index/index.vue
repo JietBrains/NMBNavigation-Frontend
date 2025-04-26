@@ -42,7 +42,7 @@
 
     <view v-if="showInput" class="modal-mask">
       <view class="modal-content">
-        <nut-cell title="选择地址" :desc="cascaderValue.toString() || '请选择地址'" @click="cascaderVisible = true" />
+        <nut-cell title="请选择您的当前地址" :desc="cascaderValue.toString() || '当前地址'" @click="cascaderVisible = true" />
         <view class="modal-buttons">
           <nut-button @click="cancel">取消</nut-button>
           <nut-button type="primary" @click="confirm">确认</nut-button>
@@ -123,44 +123,7 @@ const showPreview = ref(false)
 const currentIndex = ref(0)
 const isCollect = ref(false)
 const notLogin = ref(false)
-const comments = ref([
-  {
-    user: '用户A',
-    content: '这个产品太棒了，非常实用啊啊啊啊',
-    time: '2025-04-24',
-    avatar: 'https://picsum.photos/200/200'
-  },
-  {
-    user: '用户B',
-    content: '体验还不错，希望能增加更多功能阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶。',
-    time: '2025-04-24',
-    avatar: 'https://picsum.photos/200/201'
-  },
-  {
-    user: '用户C',
-    content: '物流速度很快，好评！',
-    time: '2025-04-24',
-    avatar: 'https://picsum.photos/200/202'
-  },
-  {
-    user: '用户C',
-    content: '物流速度很快，好评！',
-    time: '2025-04-24',
-    avatar: 'https://picsum.photos/200/202'
-  },
-  {
-    user: '用户C',
-    content: '物流速度很快，好评！',
-    time: '2025-04-24',
-    avatar: 'https://picsum.photos/200/202'
-  },
-  {
-    user: '用户C',
-    content: '物流速度很快，好评！',
-    time: '2025-04-24',
-    avatar: 'https://picsum.photos/200/202'
-  }
-]);
+const comments = ref([]);
 
 const scrollViewHeight = ref(0)
 

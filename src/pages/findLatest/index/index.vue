@@ -1,16 +1,6 @@
 <template>
-  <view class="search-bar-container">
-    <view class="search-bar">
-      <image src="/assets/icons/搜索/搜索.png" class="icon" mode="aspectFit" />
-      <input class="search-input" v-model="keyword" placeholder="搜索" @confirm="onSearch" />
-      <view class="search-btn" @tap="onSearch">搜索</view>
-    </view>
-  </view>
-  <view class="pic_container">
-    <image src="../../../assets/C1.png" class="pic" mode="aspectFit" />
-  </view>
   <view class="latest-choose">
-    <view class="choose-label">寻找最近</view>
+    <view class="choose-label">寻找最近设施</view>
     <view class="choose-items-wrapper">
       <view class="choose-item" @tap="toggleImageSelection('toilet')">
         <image src="../../../assets/icons/寻找最近/厕所.png" class="choose-image" mode="aspectFit"
@@ -23,11 +13,18 @@
         <view class="choose-text">售货机</view>
       </view>
     </view>
-    <view class="confirm-button" @tap="onConfirm" :style="{ backgroundColor: selectedImage ? '#007aff' : '#ccc' }"
-      :disabled="!selectedImage">确认</view>
+    <nut-button type="primary" @click="showInput = true" :disabled="!selectedImage">确认</nut-button>
   </view>
-  <view>
-    <nut-cascader v-model:visible="visible" v-model="value" title="请选择您的当前位置" :options="options"></nut-cascader>
+  <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置"
+    :options="options"></nut-cascader>
+  <view v-if="showInput" class="modal-mask">
+    <view class="modal-content">
+      <nut-cell title="请选择您的当前地址" :desc="cascaderValue.toString() || '当前地址'" @click="cascaderVisible = true" />
+      <view class="modal-buttons">
+        <nut-button @click="cancel">取消</nut-button>
+        <nut-button type="primary" @click="confirm">确认</nut-button>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -39,10 +36,10 @@ import building from 'src/assets/building.json'
 
 const keyword = ref('')
 const selectedImage = ref('')
-const showDialog = ref(false)
-const visible = ref(false)
-const value = ref([])
 const options = ref(building)
+const showInput = ref(false)
+const cascaderVisible = ref(false)
+const cascaderValue = ref([])
 
 const onSearch = () => {
   console.log('搜索关键词:', keyword.value)
@@ -58,7 +55,6 @@ const onButtonTapVendingMachine = () => {
 
 const onConfirm = () => {
   console.log('确认按钮被点击')
-  showDialog.value = true
   visible.value = true
 }
 
@@ -68,5 +64,16 @@ const toggleImageSelection = (imageType) => {
   } else {
     selectedImage.value = imageType
   }
+}
+
+const cancel = () => {
+  showInput.value = false
+  cascaderVisible.value = false
+}
+
+const confirm = () => {
+  showInput.value = false
+  cascaderVisible.value = false
+  console.log('当前地址:', cascaderValue.value)
 }
 </script>
