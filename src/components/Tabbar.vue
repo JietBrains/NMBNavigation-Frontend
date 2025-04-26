@@ -1,22 +1,22 @@
 <template>
     <nut-tabbar v-model="active" unactive-color="#7d7e80" active-color="#1989fa" bottom safe-area-inset-bottom placeholder
         @tab-switch="tabSwitch">
-        <nut-tabbar-item tab-title="地图" :value="11">
+        <nut-tabbar-item tab-title="地图" >
             <template #icon>
                 <Home></Home>
             </template>
         </nut-tabbar-item>
-        <nut-tabbar-item tab-title="找设施" :value="110">
+        <nut-tabbar-item tab-title="找设施" >
             <template #icon>
                 <Find></Find>
             </template>
         </nut-tabbar-item>
-        <nut-tabbar-item tab-title="收藏" :dot="true">
+        <nut-tabbar-item tab-title="收藏" :dot="false">
             <template #icon>
                 <Category></Category>
             </template>
         </nut-tabbar-item>
-        <nut-tabbar-item tab-title="关于" :dot="true">
+        <nut-tabbar-item tab-title="关于" :dot="false">
             <template #icon>
                 <My></My>
             </template>
