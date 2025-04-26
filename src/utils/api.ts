@@ -15,6 +15,11 @@ const uploadCollection = (data: any) => {
     return post('/collect/add', data)
 }
 
+// 查看某个用户是否收藏了某个地点
+const collectJudgement = (data: any) => {
+    return get('/collect/judgement', data)
+}
+
 //上传反馈信息
 
 const uploadFeedback = (data: any) => {
@@ -65,5 +70,6 @@ export {
     getAllCollection,
     deleteCollection,
     uploadComment,
-    getComment
+    getComment,
+    collectJudgement
 }

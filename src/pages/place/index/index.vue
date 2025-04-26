@@ -1,5 +1,5 @@
 <template>
-  <nut-image-preview :show="showPreview" :images="imgList3" :init-no="currentIndex" @close="hideFn" />
+  <nut-image-preview :show="showPreview" :images="swiperList" :init-no="currentIndex" @close="hideFn" />
   <view class="container">
     <nut-searchbar disabled="true" @click="onSearch">
       <template #rightin>
@@ -50,9 +50,8 @@
       </view>
     </view>
 
-    <view v-if="selectedPlace" class="place-card">
-      <view class="place-name">{{ selectedPlace.name }}</view>
-      <view class="place-desc">{{ selectedPlace.description }}</view>
+    <view class="place-card">
+      <view class="place-name">{{ end }}</view>
       <view class="actions">
         <nut-button shape="round" type="default" size="normal" @click="onClickComment">
           <template #icon>
@@ -62,7 +61,12 @@
         </nut-button>
         <nut-button shape="round" type="default" size="normal" @click="onCollect">
           <template #icon>
-            <Star />
+            <view v-if="isCollect">
+              <image src="/assets/icons/收藏 (已收藏).png" class="icon" />
+            </view>
+            <view v-else>
+              <image src="/assets/icons/收藏.png" class="icon" />
+            </view>
           </template>
           收藏
         </nut-button>
@@ -91,10 +95,13 @@ import Taro, { useRouter } from "@tarojs/taro";
 import { onMounted, ref } from "vue";
 import photo from '/src/assets/A1.jpg'
 import collectIcon from 'src/assets/icons/收藏.png'
+import hasCollectIcon from 'src/assets/icons/收藏 (已收藏).png'
 import wayIcon from 'src/assets/icons/导航.png'
 import message from 'src/assets/icons/聊天.png'
-import { Star, Message, Left, Right, Search2 } from '@nutui/icons-vue-taro'
+import { Message, Left, Right, Search2 } from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
+import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment } from 'src/utils/api.ts'
+import { comment } from 'postcss';
 
 const params = Taro.getCurrentInstance().router?.params
 console.log(params?.name)
@@ -104,27 +111,18 @@ const imgList = ref([
   '/assets/icons/导航.png',
   '/assets/icons/收藏.png',
 ])
-const imgList3 = ref([
-  {
-    'src': '/assets/A1.jpg',
-  },
-  {
-    'src': '/assets/icons/导航.png',
-  },
-  {
-    'src': '/assets/icons/收藏.png',
-  }
-])
+const swiperList = ref(imgList.value.map(url => ({ src: url })))
 const showInput = ref(false)
 const showPopup = ref(false)
 const textareaValue = ref('')
 const cascaderVisible = ref(false)
 const swiperRef = ref()
-const selectedPlace = { name: '咖啡店', description: '提供咖啡、甜点和休闲环境。' }
 const options = ref(building)
 const cascaderValue = ref([])
 const showPreview = ref(false)
 const currentIndex = ref(0)
+const isCollect = ref(false)
+const notLogin = ref(false)
 const comments = ref([
   {
     user: '用户A',
@@ -178,7 +176,25 @@ const OnCommitComment = () => {
     })
     return
   }
-  // TODO: 提交评论到服务器
+  uploadComment({
+    name: end.value,
+    comment: textareaValue.value,
+    images: [],
+  }).then((res) => {
+    console.log('uploadComment:', res)
+    if (res.code == '504') {
+      notLogin.value = true
+      return
+    }
+    Taro.showToast({
+      title: '评论成功',
+      icon: 'success',
+    })
+    textareaValue.value = ''
+    showPopup.value = false
+  }).catch((err) => {
+    console.error('Error:', err)
+  })
 }
 
 const onSearch = () => {
@@ -209,6 +225,44 @@ onMounted(() => {
       })
     }
   })
+
+  collectJudgement({
+    name: end.value,
+  }).then((res) => {
+    console.log('collectJudgement:', res)
+    if (res.code == '504') {
+      notLogin.value = true
+      return
+    }
+    else if (res.data) {
+      isCollect.value = true
+    } else {
+      isCollect.value = false
+    }
+  }).catch((err) => {
+    console.error('Error:', err)
+    isCollect.value = false
+  })
+
+  getComment({
+    name: end.value,
+  }).then((res) => {
+    console.log('getComment:', res)
+    if (res.code == '504') {
+      notLogin.value = true
+      return
+    }
+    if (res.data.comments) {
+      comments.value = res.data.comments.map(comment => comment.description)
+    }
+    else {
+      comments.value = []
+    }
+})
+  .catch((err) => {
+    console.error('Error:', err)
+    comments.value = []
+  })
 })
 
 const confirm = () => {
@@ -220,6 +274,13 @@ const confirm = () => {
 }
 
 const onClickComment = () => {
+  if (notLogin.value) {
+    Taro.showToast({
+      title: '请先登录',
+      icon: 'none',
+    })
+    return
+  }
   showPopup.value = true
 }
 
@@ -241,10 +302,52 @@ const showFn = (index) => {
 const swiperOnChange = (index) => {
   currentIndex.value = index
 }
+
+const onCollect = () => {
+  if (notLogin.value) {
+    Taro.showToast({
+      title: '请先登录',
+      icon: 'none',
+    })
+    return
+  }
+  if (isCollect.value) {
+    deleteCollection({
+      name: end.value
+    }).then((res) => {
+      console.log('deleteCollection:', res)
+      if (res.code == '504') {
+        notLogin.value = true
+        return
+      }
+    }).catch((err) => {
+      console.error('Error:', err)
+    })
+    Taro.showToast({
+      title: '已取消收藏',
+      icon: 'none',
+    })
+  } else {
+    uploadCollection({
+      name: end.value,
+    }).then((res) => {
+      console.log('uploadCollection:', res)
+      if (res.code == '504') {
+        notLogin.value = true
+        return
+      }
+    }).catch((err) => {
+      console.error('Error:', err)
+    })
+    Taro.showToast({
+      title: '收藏成功',
+      icon: 'success',
+    })
+  }
+  isCollect.value = !isCollect.value
+
+}
 </script>
 
 <style lang="scss">
-@import './index'; // 如果你写在外部文件中
-
-
-</style>    
+@import './index'; // 如果你写在外部文件中</style>

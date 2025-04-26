@@ -44,9 +44,16 @@
 }
 
 .place-name {
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-bottom: 8rpx;
+  /* 设置字体大小，单位 rpx 在小程序中可适配不同屏幕 */
+  font-size: 50rpx; 
+  /* 设置字体颜色，这里是深灰色示例，可换成你喜欢的颜色值 */
+  color: #333333; 
+  /* 设置字体粗细为加粗 */
+  font-weight: bold; 
+  /* 设置文本的行高，这里设置为和字体大小差不多的数值让文本看起来更美观，也可自行调整 */
+  line-height: 36rpx; 
+  margin-left: 20rpx;
+  margin-bottom: 20rpx;
 }
 
 .place-desc {
