@@ -87,6 +87,7 @@
     <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置"
       :options="options"></nut-cascader>
   </view>
+    <Tabbar></Tabbar>
 </template>
 
 <script setup>
@@ -102,6 +103,7 @@ import { Message, Left, Right, Search2 } from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
 import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment } from 'src/utils/api.ts'
 import { comment } from 'postcss';
+import Tabbar from '../../../components/Tabbar.vue'
 
 // const params = Taro.getCurrentInstance().router?.params
 

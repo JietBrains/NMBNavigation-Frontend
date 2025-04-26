@@ -26,6 +26,7 @@
     <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置" :options="options"
       @change="onCascaderChange"></nut-cascader>
   </view>
+
     <Tabbar></Tabbar>
 </template>
 
