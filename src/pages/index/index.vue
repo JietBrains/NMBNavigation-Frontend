@@ -30,15 +30,14 @@ const hasUserInfo = ref(false)
 const canIUseGetUserProfile = ref(false)
 
 onMounted(() => {
-    if (Taro.getUserProfile) {
-        canIUseGetUserProfile.value = true
-    }
+    canIUseGetUserProfile.value = true
 })
 
 const getUserProfile = () => {
     Taro.getUserProfile({
         desc: '用于完善会员资料',
         success: (res) => {
+            console.log('获取用户信息成功', res.userInfo)
             userInfo.avatarUrl = res.userInfo.avatarUrl
             userInfo.nickName = res.userInfo.nickName
             hasUserInfo.value = true
