@@ -1,4 +1,4 @@
-import {get, post, del, queryPost} from './apiConfig'
+import {get, post, del, queryPost， query, queryDel} from './apiConfig'
 
 // 首页查看各地点图片
 const viewAllPhotoOnMainPage = (data: any) => {
@@ -43,7 +43,7 @@ const getAllCollection = (data: any) => {
 
 // 删除收藏
 const deleteCollection = (data: any) => {
-    return del('/collect/delete', data)
+    return queryDel('/collect/delete', data)
 }
 
 // 上传评论
@@ -80,7 +80,7 @@ const clearSearchHistory = (data: any) => {
 }
 
 const login = (data: any) => {
-    return queryPost('/user/login', data)
+    return post('/user/login', data)
 }
 
 export {

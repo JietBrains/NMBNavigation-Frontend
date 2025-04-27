@@ -116,6 +116,20 @@ function del(url: string, data?: Record<string, any>, header?: Record<string, st
     });
 }
 
+function queryDel(url: string, data?: Record<string, any>, header?: Record<string, string>) {
+    // 如果有数据，则将其转换为查询字符串
+    if (data) {
+        const queryString = objectToQueryString(data);
+        url = `${url}?${queryString}`;
+    }
+    return request({
+        url,
+        method: 'DELETE',
+        data: {}, // 由于参数已经在 URL 里，这里的 data 置为空
+        header
+    });
+}
+
 // 导出请求函数
 export {
     get,
@@ -123,4 +137,5 @@ export {
     put,
     del,
     queryPost,
+    queryDel,
 };
