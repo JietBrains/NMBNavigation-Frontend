@@ -20,7 +20,7 @@ function request({
             timeout: 10000, // 请求超时时间，单位为毫秒
             header: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${Taro.getStorageSync('token')}`, // 从本地存储中获取 token
+                'Authorization': `${Taro.getStorageSync('token')}`, // 从本地存储中获取 token
             }
         };
         Taro.request({
@@ -82,6 +82,20 @@ function post(url: string, data?: Record<string, any>, header?: Record<string, s
     });
 }
 
+function queryPost(url: string, data?: Record<string, any>, header?: Record<string, string>) {
+    // 如果有数据，则将其转换为查询字符串
+    if (data) {
+        const queryString = objectToQueryString(data);
+        url = `${url}?${queryString}`;
+    }
+    return request({
+        url,
+        method: 'POST',
+        data: {}, // 由于参数已经在 URL 里，这里的 data 置为空
+        header
+    });
+}
+
 // 定义 PUT 请求
 function put(url: string, data?: Record<string, any>, header?: Record<string, string>) {
     return request({
@@ -107,5 +121,6 @@ export {
     get,
     post,
     put,
-    del
+    del,
+    queryPost,
 };

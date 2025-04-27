@@ -29,6 +29,7 @@ import Tabbar from '../../../components/Tabbar.vue'
 
 // 收藏数据
 const allItems = ref([])
+const hasLogin = ref(false)
 
 function goToLocation(item) {
   Taro.navigateTo({
@@ -88,11 +89,18 @@ const onChange = (item) => {
 }
 
 onMounted(() => {
-  console.log('onMounted')
+  hasLogin.value = Taro.getStorageSync('token') ? true : false
+  if (!hasLogin.value) {
+    Taro.showToast({
+      title: '获取收藏数据失败，请先登录',
+      icon: 'none'
+    })
+    return
+  }
   // 获取收藏数据
   getAllCollection().then(res => {
+    console.log('getAllCollection', res)
     if (res.code === 200) {
-      console.log('getAllCollection', res)
       res.data.collects.forEach((item, index) => {
         const id = index + 1;
         const building = item[0] + '座';
@@ -112,5 +120,4 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-@import './index'; // 如果你写在外部文件中
-</style>
+@import './index'; // 如果你写在外部文件中</style>

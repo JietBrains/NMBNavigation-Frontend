@@ -52,7 +52,8 @@ const STORAGE_KEY = 'search_records'
 // 加载历史记录
 onMounted(() => {
   hasLogin.value = Taro.getStorageSync('token') ? true : false
-  if (hasLogin) {
+  console.log('hasLogin', hasLogin.value)
+  if (hasLogin.value) {
     loadSearchHistory().then(res => {
       if (res.code === 200) {
         history.value = res.data
@@ -80,9 +81,11 @@ function onSearch() {
   // 更新历史：去重 + 限制10条
   const list = history.value.filter(i => i.name !== newItem.name)
   history.value = [newItem, ...list].slice(0, 10)
-  if (hasLogin) {
+  hasLogin.value = Taro.getStorageSync('token') ? true : false
+  if (hasLogin.value) {
     console.log('newItem', newItem)
-    saveSearchHistory({ 'data': newItem }).then(res => {
+    console.log('newItem.name', newItem.name)
+    saveSearchHistory({ 'name': newItem.name }).then(res => {
       if (res.code === 200) {
         console.log('搜索历史保存成功')
       } else {
@@ -105,7 +108,8 @@ function selectHistory(item) {
 }
 
 function clearHistory() {
-  if (hasLogin) {
+  hasLogin.value = Taro.getStorageSync('token') ? true : false
+  if (hasLogin.value) {
     Taro.showModal({
       title: '提示',
       content: '确定要清空历史记录吗？',

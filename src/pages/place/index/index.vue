@@ -140,7 +140,7 @@ const OnCommitComment = () => {
       icon: 'none',
     })
     Taro.navigateTo({
-      url: '/pages/login/index/index',
+      url: '/pages/login/index',
     })
     return
   }
@@ -248,10 +248,14 @@ const confirm = () => {
 }
 
 const onClickComment = () => {
+  hasLogin.value = Taro.getStorageSync('token') ? true : false
   if (!hasLogin.value) {
     Taro.showToast({
       title: '请先登录',
       icon: 'none',
+    })
+    Taro.navigateTo({
+      url: '/pages/login/index',
     })
     return
   }
@@ -278,13 +282,14 @@ const swiperOnChange = (index) => {
 }
 
 const onCollect = () => {
+  hasLogin.value = Taro.getStorageSync('token') ? true : false
   if (!hasLogin.value) {
     Taro.showToast({
       title: '请先登录',
       icon: 'none',
     })
     Taro.navigateTo({
-      url: '/pages/login/index/index',
+      url: '/pages/login/index',
     })
     return
   }

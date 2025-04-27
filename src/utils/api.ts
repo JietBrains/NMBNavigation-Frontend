@@ -1,4 +1,4 @@
-import {get, post, del} from './apiConfig'
+import {get, post, del, queryPost} from './apiConfig'
 
 // 首页查看各地点图片
 const viewAllPhotoOnMainPage = (data: any) => {
@@ -12,7 +12,7 @@ const searchOnePhoto = (data: any) => {
 
 // 收藏
 const uploadCollection = (data: any) => {
-    return post('/collect/add', data)
+    return queryPost('/collect/add', data)
 }
 
 // 查看某个用户是否收藏了某个地点
@@ -60,12 +60,13 @@ const getComment = (data: any) => {
 
 // 置顶收藏
 const topCollection = (data: any) => {
-    return post('/collect/top', data)
+    return queryPost('/collect/top', data)
 }
 
 // 搜索保存历史记录
 const saveSearchHistory = (data: any) => {
-    return post('/search/save', data)
+    console.log(data)
+    return queryPost('/search/save', data)
 }
 
 // 获取当前用户的搜索记录
@@ -79,7 +80,7 @@ const clearSearchHistory = (data: any) => {
 }
 
 const login = (data: any) => {
-    return post('/user/login', data)
+    return queryPost('/user/login', data)
 }
 
 export {
