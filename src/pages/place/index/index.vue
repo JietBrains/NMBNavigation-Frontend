@@ -27,7 +27,13 @@
 
       <view class="comment-section">
         <nut-cell-group title="用户评论">
-          <nut-cell v-for="(comment, index) in comments" :key="index" :sub-title="comment.description" size="large">
+          <nut-cell v-for="(comment, index) in comments" :key="index" :title="comment.user" :sub-title="comment.description"
+            size="large" :desc="comment.time">
+            <template #icon>
+              <nut-avatar size="small">
+                <image :src="comment.avatar" />
+              </nut-avatar>
+            </template>
           </nut-cell>
         </nut-cell-group>
       </view>
@@ -44,13 +50,16 @@
       </view>
     </view>
 
-    <nut-fixed-nav v-model:visible="fixedNavvisible" :position="{ top: 'calc(50% - 30px)', transform: 'translateY(-50%)' }" type="right" :nav-list="navList" @selected="onSelected">
+    <nut-fixed-nav v-model:visible="fixedNavvisible"
+      :position="{ top: 'calc(50% - 30px)', transform: 'translateY(-50%)' }" type="right" :nav-list="navList"
+      @selected="onSelected">
       <template #btn>
         <MoreX color="#fff" />
         <span class="text">更多</span>
       </template>
     </nut-fixed-nav>
-    <nut-fixed-nav :visible=false :position="{ top: 'calc(50% + 30px)', transform: 'translateY(-50%)' }" type="right" @click="navigateToPlace">
+    <nut-fixed-nav :visible=false :position="{ top: 'calc(50% + 30px)', transform: 'translateY(-50%)' }" type="right"
+      @click="navigateToPlace">
       <template #btn>
         <Find color="#fff" />
         <span class="text">导航</span>
@@ -76,9 +85,9 @@ import photo from '/src/assets/A1.jpg'
 import collectIcon from 'src/assets/icons/收藏.png'
 import hasCollectIcon from 'src/assets/icons/收藏 (已收藏).png'
 import message from 'src/assets/icons/聊天.png'
-import { Message, Left, Right, Search2, MoreX, Find  } from '@nutui/icons-vue-taro'
+import { Message, Left, Right, Search2, MoreX, Find } from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
-import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment} from 'src/utils/api.ts'
+import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment } from 'src/utils/api.ts'
 import { comment } from 'postcss';
 import Tabbar from '../../../components/Tabbar.vue'
 
@@ -317,7 +326,7 @@ const onCollect = () => {
 
 }
 
-const onSelected = ({item:item,$event:Event}) => {
+const onSelected = ({ item: item, $event: Event }) => {
   console.log('onSelected:', item)
   if (item.id == 1) {
     onClickComment()
