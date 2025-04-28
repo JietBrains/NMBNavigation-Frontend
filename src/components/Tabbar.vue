@@ -42,13 +42,13 @@ onMounted(() => {
 const tabSwitch = (item: Record<string, unknown>, index: number) => {
   console.log(item, index)
   if (index == 0) { // 地图
-    Taro.navigateTo({url: '/pages/map/index/index'})
+    Taro.redirectTo({url: '/pages/map/index/index'})
   } else if (index == 1) {
-    Taro.navigateTo({url: '/pages/findLatest/index/index'})
+    Taro.redirectTo({url: '/pages/findLatest/index/index'})
   } else if (index == 2) {
-    Taro.navigateTo({url: '/pages/collect/index/index'})
+    Taro.redirectTo({url: '/pages/collect/index/index'})
   } else if (index == 3) {
-    Taro.navigateTo({url: '/pages/login/index'})
+    Taro.redirectTo({url: '/pages/login/index'})
   }
   // userStore.setIndex(index)
 }
