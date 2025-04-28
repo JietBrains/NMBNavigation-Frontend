@@ -6,7 +6,7 @@ const viewAllPhotoOnMainPage = (data: any) => {
 }
 
 //搜索一个地点的图片和信息
-const searchOnePhoto = (data: any) => {
+const searchPhotos = (data: any) => {
     return get('/search/place', data)
 }
 
@@ -86,7 +86,7 @@ const login = (data: any) => {
 
 export {
     viewAllPhotoOnMainPage,
-    searchOnePhoto,
+    searchPhotos,
     uploadCollection,
     uploadFeedback,
     getNavigation,

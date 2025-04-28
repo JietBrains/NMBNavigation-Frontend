@@ -27,8 +27,8 @@
 
       <view class="comment-section">
         <nut-cell-group title="用户评论">
-          <nut-cell v-for="(comment, index) in comments" :key="index" :title="comment.user" :sub-title="comment.description"
-            size="large" :desc="comment.time">
+          <nut-cell v-for="(comment, index) in comments" :key="index" :title="comment.user"
+            :sub-title="comment.description" size="large" :desc="comment.time">
             <template #icon>
               <nut-avatar size="small">
                 <image :src="comment.avatar" />
@@ -87,16 +87,12 @@ import hasCollectIcon from 'src/assets/icons/收藏 (已收藏).png'
 import message from 'src/assets/icons/聊天.png'
 import { Message, Left, Right, Search2, MoreX, Find } from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
-import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment } from 'src/utils/api.ts'
+import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment, searchPhotos } from 'src/utils/api.ts'
 import { comment } from 'postcss';
 import Tabbar from '../../../components/Tabbar.vue'
 
-const imgList = ref([
-  '/assets/A1.jpg',
-  '/assets/icons/导航.png',
-  '/assets/icons/收藏.png',
-])
-const swiperList = ref(imgList.value.map(url => ({ src: url })))
+const imgList = ref()
+const swiperList = ref()
 const showInput = ref(false)
 const showPopup = ref(false)
 const textareaValue = ref('')
@@ -195,6 +191,23 @@ onMounted(() => {
   const params = (instance && instance.router && instance.router.params) || {};
   end.value = params.name || ''
   console.log('收到参数 end:', end.value)
+
+  searchPhotos({
+    name: end.value,
+  }).then((res) => {
+    console.log('searchPhotos:', res)
+    if (res.code == 200) {
+      imgList.value = res.data.images
+      swiperList.value = imgList.value.map(url => ({ src: url }))
+    } else {
+      imgList.value = [photo]
+      swiperList.value = imgList.value.map(url => ({ src: url }))
+    }
+  }).catch((err) => {
+    console.error('Error:', err)
+    imgList.value = [photo]
+    swiperList.value = imgList.value.map(url => ({ src: url }))
+  })
 
   if (!hasLogin.value) {
     navList.value = navListWithoutCollect.value
