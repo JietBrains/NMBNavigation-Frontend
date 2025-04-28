@@ -43,7 +43,7 @@ const getAllCollection = (data: any) => {
 
 // 删除收藏
 const deleteCollection = (data: any) => {
-    return queryDel('/collect/delete', data)
+    return queryPost('/collect/delete', data)
 }
 
 // 上传评论
