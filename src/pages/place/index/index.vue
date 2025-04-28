@@ -44,13 +44,13 @@
       </view>
     </view>
 
-    <nut-fixed-nav v-model:visible="fixedNavvisible" :position="{ top: '280px' }" type="left" :nav-list="navList" @selected="onSelected">
+    <nut-fixed-nav v-model:visible="fixedNavvisible" :position="{ top: 'calc(50% - 30px)', transform: 'translateY(-50%)' }" type="right" :nav-list="navList" @selected="onSelected">
       <template #btn>
         <MoreX color="#fff" />
         <span class="text">更多</span>
       </template>
     </nut-fixed-nav>
-    <nut-fixed-nav :visible=false :position="{ top: '340px' }" type="left" @click="navigateToPlace">
+    <nut-fixed-nav :visible=false :position="{ top: 'calc(50% + 30px)', transform: 'translateY(-50%)' }" type="right" @click="navigateToPlace">
       <template #btn>
         <Find color="#fff" />
         <span class="text">导航</span>
