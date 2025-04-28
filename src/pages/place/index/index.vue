@@ -7,7 +7,7 @@
       </template>
     </nut-searchbar>
 
-    <scroll-view :style="{ height: scrollViewHeight + 'px' }" scroll-y="true" class="scroll-area">
+    <scroll-view scroll-y="true" class="scroll-area">
       <view class="swiper-demo">
         <nut-swiper ref="swiperRef" pagination-visible pagination-color="#FF0000" @change="swiperOnChange"
           @click="showFn">
@@ -27,13 +27,7 @@
 
       <view class="comment-section">
         <nut-cell-group title="用户评论">
-          <nut-cell v-for="(comment, index) in comments" :key="index" :title="comment.user" :sub-title="comment.content"
-            size="large" :desc="comment.time">
-            <template #icon>
-              <nut-avatar size="small">
-                <image :src="comment.avatar" />
-              </nut-avatar>
-            </template>
+          <nut-cell v-for="(comment, index) in comments" :key="index" :sub-title="comment.description" size="large">
           </nut-cell>
         </nut-cell-group>
       </view>
@@ -50,34 +44,18 @@
       </view>
     </view>
 
-    <view class="place-card">
-      <view class="place-name">{{ end }}</view>
-      <view class="actions">
-        <nut-button shape="round" type="default" size="normal" @click="onClickComment">
-          <template #icon>
-            <Message />
-          </template>
-          评论
-        </nut-button>
-        <nut-button shape="round" type="default" size="normal" @click="onCollect">
-          <template #icon>
-            <view v-if="isCollect">
-              <image src="/assets/icons/收藏 (已收藏).png" class="icon" />
-            </view>
-            <view v-else>
-              <image src="/assets/icons/收藏.png" class="icon" />
-            </view>
-          </template>
-          收藏
-        </nut-button>
-        <nut-button shape="round" type="primary" size="normal" @click="navigateToPlace">
-          <template #icon>
-            <image src="/assets/icons/导航.png" class="icon" />
-          </template>
-          去这里
-        </nut-button>
-      </view>
-    </view>
+    <nut-fixed-nav v-model:visible="fixedNavvisible" :position="{ top: '280px' }" type="left" :nav-list="navList" @selected="onSelected">
+      <template #btn>
+        <MoreX color="#fff" />
+        <span class="text">更多</span>
+      </template>
+    </nut-fixed-nav>
+    <nut-fixed-nav :visible=false :position="{ top: '340px' }" type="left" @click="navigateToPlace">
+      <template #btn>
+        <Find color="#fff" />
+        <span class="text">导航</span>
+      </template>
+    </nut-fixed-nav>
     <nut-popup v-model:visible="showPopup" position="bottom">
       <nut-textarea v-model="textareaValue" :limit-show="true" :max-length="25" placeholder="请输入评论" />
       <view class="popup-buttons">
@@ -92,21 +70,17 @@
 
 <script setup>
 import './index.scss'
-import Taro, { useRouter } from "@tarojs/taro";
+import Taro, { useRouter, nextTick } from "@tarojs/taro";
 import { onMounted, ref } from "vue";
 import photo from '/src/assets/A1.jpg'
 import collectIcon from 'src/assets/icons/收藏.png'
 import hasCollectIcon from 'src/assets/icons/收藏 (已收藏).png'
-import wayIcon from 'src/assets/icons/导航.png'
 import message from 'src/assets/icons/聊天.png'
-import { Message, Left, Right, Search2 } from '@nutui/icons-vue-taro'
+import { Message, Left, Right, Search2, MoreX, Find  } from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
-import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment } from 'src/utils/api.ts'
+import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment} from 'src/utils/api.ts'
 import { comment } from 'postcss';
 import Tabbar from '../../../components/Tabbar.vue'
-
-// const params = Taro.getCurrentInstance().router?.params
-
 
 const imgList = ref([
   '/assets/A1.jpg',
@@ -126,8 +100,34 @@ const currentIndex = ref(0)
 const isCollect = ref(false)
 const hasLogin = ref(true)
 const comments = ref([]);
+const fixedNavvisible = ref(false)
+const navList = ref([])
+const end = ref('')
+const navListWithCollect = ref([
+  {
+    id: 1,
+    text: '评论',
+    icon: message,
+  },
+  {
+    id: 2,
+    text: '收藏',
+    icon: hasCollectIcon,
+  }
+])
 
-const scrollViewHeight = ref(0)
+const navListWithoutCollect = ref([
+  {
+    id: 1,
+    text: '评论',
+    icon: message,
+  },
+  {
+    id: 2,
+    text: '收藏',
+    icon: collectIcon,
+  }
+])
 
 const navigateToPlace = () => {
   showInput.value = true
@@ -149,11 +149,11 @@ const OnCommitComment = () => {
       title: '评论内容不能为空',
       icon: 'none',
     })
-    
+
   }
   uploadComment({
-    name: end.value,
-    comment: textareaValue.value,
+    name: end.value.substring(0, 2),
+    description: textareaValue.value,
     images: [],
   }).then((res) => {
     console.log('uploadComment:', res)
@@ -180,7 +180,6 @@ const cancel = () => {
   showInput.value = false
 }
 
-const end = ref('')
 onMounted(() => {
   hasLogin.value = Taro.getStorageSync('token') ? true : false
   const instance = Taro.getCurrentInstance()
@@ -188,50 +187,43 @@ onMounted(() => {
   end.value = params.name || ''
   console.log('收到参数 end:', end.value)
 
-  Taro.getSystemInfo({
-    success: (res) => {
-      const query = Taro.createSelectorQuery()
-      query.select('.place-card').boundingClientRect()
-      query.select('.Tabbar').boundingClientRect()
-      query.exec((rects) => {
-        const placeCardHeight = (rects[0] && rects[0].height) || 0
-        const tabbarHeight = (rects[1] && rects[1].height) || 0
-        scrollViewHeight.value = res.windowHeight - placeCardHeight - tabbarHeight
-      })
-    }
-  })
   if (!hasLogin.value) {
+    navList.value = navListWithoutCollect.value
     isCollect.value = false
     comments.value = []
-    return
   }
-  collectJudgement({
-    name: end.value,
-  }).then((res) => {
-    console.log('collectJudgement:', res)
-    if (res.code == 200) {
-      if (res.data) {
-        isCollect.value = true
-      } else {
-        isCollect.value = false
+  else {
+    collectJudgement({
+      name: end.value,
+    }).then((res) => {
+      console.log('collectJudgement:', res)
+      if (res.code == 200) {
+        if (res.data) {
+          isCollect.value = true
+          navList.value = navListWithCollect.value
+        } else {
+          isCollect.value = false
+          navList.value = navListWithoutCollect.value
+        }
       }
-    }
-  }).catch((err) => {
-    console.error('Error:', err)
-    isCollect.value = false
-  })
+    }).catch((err) => {
+      console.error('Error:', err)
+      isCollect.value = false
+    })
+  }
 
   getComment({
-    name: end.value,
+    name: end.value.substring(0, 2),
   }).then((res) => {
     console.log('getComment:', res)
     if (res.code == 200) {
       if (res.data.comments) {
-        comments.value = res.data.comments.map(comment => comment.description)
+        comments.value = res.data.comments
       }
       else {
         comments.value = []
       }
+      console.log('comments:', comments.value)
     }
   }).catch((err) => {
     console.error('Error:', err)
@@ -323,6 +315,20 @@ const onCollect = () => {
   }
   isCollect.value = !isCollect.value
 
+}
+
+const onSelected = ({item:item,$event:Event}) => {
+  console.log('onSelected:', item)
+  if (item.id == 1) {
+    onClickComment()
+  } else if (item.id == 2) {
+    onCollect()
+    if (isCollect.value) {
+      navList.value = navListWithCollect.value
+    } else {
+      navList.value = navListWithoutCollect.value
+    }
+  }
 }
 </script>
 

@@ -1,4 +1,4 @@
-import {get, post, del, queryPost， query, queryDel} from './apiConfig'
+import {get, post, del, queryPost, queryDel} from './apiConfig'
 
 // 首页查看各地点图片
 const viewAllPhotoOnMainPage = (data: any) => {
@@ -48,6 +48,7 @@ const deleteCollection = (data: any) => {
 
 // 上传评论
 const uploadComment = (data: any) => {
+    console.log(data)
     return post('/comment/upload', data)
 }
 

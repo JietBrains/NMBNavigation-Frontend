@@ -14,6 +14,7 @@ declare module 'vue' {
     NutCascader: typeof import('@nutui/nutui-taro')['Cascader']
     NutCell: typeof import('@nutui/nutui-taro')['Cell']
     NutCellGroup: typeof import('@nutui/nutui-taro')['CellGroup']
+    NutFixedNav: typeof import('@nutui/nutui-taro')['FixedNav']
     NutImagePreview: typeof import('@nutui/nutui-taro')['ImagePreview']
     NutInput: typeof import('@nutui/nutui-taro')['Input']
     NutPopup: typeof import('@nutui/nutui-taro')['Popup']
