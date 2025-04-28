@@ -47,8 +47,9 @@ const onChange = (item) => {
     ],
     success(res) {
       console.log(item.name)
-      if (res.tapIndex === "置顶") {
+      if (res.tapIndex === 0) {
         topCollection({ 'name': item.name }).then(res => {
+          console.log('topCollection', res)
           if (res.code === 200) {
             Taro.showToast({
               title: '置顶成功',
@@ -61,7 +62,7 @@ const onChange = (item) => {
             })
           }
         })
-      } else if (res.tapIndex === "删除该地点") {
+      } else if (res.tapIndex === 1) {
         deleteCollection({ 'name': item.name }).then(res => {
           if (res.code === 200) {
             Taro.showToast({

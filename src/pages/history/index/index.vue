@@ -12,7 +12,7 @@
         <view class="left" @tap="selectHistory(item)">
           <image src="/assets/icons/搜索/时钟.png" class="icon" />
           <view class="info">
-            <view class="title">{{ item.name }}</view>
+            <view class="title">{{ item }}</view>
           </view>
         </view>
         <image src="/assets/icons/搜索/右转箭头.png" class="icon" @tap="selectHistory(item)" />
@@ -56,6 +56,7 @@ onMounted(() => {
   if (hasLogin.value) {
     loadSearchHistory().then(res => {
       if (res.code === 200) {
+        console.log('loadSearchHistory', res.data)
         history.value = res.data
       } else {
         Taro.showToast({
@@ -75,17 +76,14 @@ onMounted(() => {
 
 function onSearch() {
   if (!keyword.value.trim()) return
-  const newItem = {
-    name: keyword.value.trim(),
-  }
+  const newItem = keyword.value.trim()
   // 更新历史：去重 + 限制10条
-  const list = history.value.filter(i => i.name !== newItem.name)
+  const list = history.value.filter(i => i!== newItem)
   history.value = [newItem, ...list].slice(0, 10)
   hasLogin.value = Taro.getStorageSync('token') ? true : false
   if (hasLogin.value) {
     console.log('newItem', newItem)
-    console.log('newItem.name', newItem.name)
-    saveSearchHistory({ 'name': newItem.name }).then(res => {
+    saveSearchHistory({ 'name': newItem }).then(res => {
       if (res.code === 200) {
         console.log('搜索历史保存成功')
       } else {
@@ -103,7 +101,7 @@ function onSearch() {
 }
 
 function selectHistory(item) {
-  keyword.value = item.name
+  keyword.value = item
   onSearch()
 }
 
