@@ -1,18 +1,18 @@
 <template>
-  <nut-image-preview :show="showPreview" :images="swiperList" :init-no="currentIndex" @close="hideFn" />
+  <nut-image-preview :show="showPreview" :images="swiperList" :init-no="currentIndex" @close="hideFn"/>
   <view class="container">
     <nut-searchbar disabled="true" @click="onSearch">
       <template #rightin>
-        <Search2 />
+        <Search2/>
       </template>
     </nut-searchbar>
 
     <scroll-view scroll-y="true" class="scroll-area">
       <view class="swiper-demo">
         <nut-swiper ref="swiperRef" pagination-visible pagination-color="#FF0000" @change="swiperOnChange"
-          @click="showFn">
+                    @click="showFn">
           <nut-swiper-item v-for="(item, index) in imgList" :key="index" style="height: 200px">
-            <img :src="item" alt="" style="height: 100%; width: 100%" draggable="false" />
+            <img :src="item" alt="" style="height: 100%; width: 100%" draggable="false"/>
           </nut-swiper-item>
         </nut-swiper>
         <view class="swiper-btns">
@@ -28,10 +28,11 @@
       <view class="comment-section">
         <nut-cell-group title="用户评论">
           <nut-cell v-for="(comment, index) in comments" :key="index" :title="comment.user"
-            :sub-title="comment.description" size="large" :desc="comment.time">
+                    :sub-title="comment.description"
+                    size="large" :desc="comment.time">
             <template #icon>
               <nut-avatar size="small">
-                <image :src="comment.avatar" />
+                <image :src="comment.avatar"/>
               </nut-avatar>
             </template>
           </nut-cell>
@@ -42,7 +43,8 @@
 
     <view v-if="showInput" class="modal-mask">
       <view class="modal-content">
-        <nut-cell title="请选择您的当前地址" :desc="cascaderValue.toString() || '当前地址'" @click="cascaderVisible = true" />
+        <nut-cell title="请选择您的当前地址" :desc="cascaderValue.toString() || '当前地址'"
+                  @click="cascaderVisible = true"/>
         <view class="modal-buttons">
           <nut-button @click="cancel">取消</nut-button>
           <nut-button type="primary" @click="confirm">确认</nut-button>
@@ -51,41 +53,43 @@
     </view>
 
     <nut-fixed-nav v-model:visible="fixedNavvisible"
-      :position="{ top: 'calc(50% - 30px)', transform: 'translateY(-50%)' }" type="right" :nav-list="navList"
-      @selected="onSelected">
+                   :position="{ top: 'calc(50% - 30px)', transform: 'translateY(-50%)' }" type="right"
+                   :nav-list="navList"
+                   @selected="onSelected">
       <template #btn>
-        <MoreX color="#fff" />
+        <MoreX color="#fff"/>
         <span class="text">更多</span>
       </template>
     </nut-fixed-nav>
     <nut-fixed-nav :visible=false :position="{ top: 'calc(50% + 30px)', transform: 'translateY(-50%)' }" type="right"
-      @click="navigateToPlace">
+                   @click="navigateToPlace">
       <template #btn>
-        <Find color="#fff" />
+        <Find color="#fff"/>
         <span class="text">导航</span>
       </template>
     </nut-fixed-nav>
     <nut-popup v-model:visible="showPopup" position="bottom">
-      <nut-textarea v-model="textareaValue" :limit-show="true" :max-length="25" placeholder="请输入评论" />
+      <nut-textarea v-model="textareaValue" :limit-show="true" :max-length="25" placeholder="请输入评论"/>
       <view class="popup-buttons">
         <nut-button type="primary" size='normal' @click="OnCommitComment">提交</nut-button>
       </view>
     </nut-popup>
     <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置"
-      :options="options"></nut-cascader>
+                  :options="options"></nut-cascader>
   </view>
   <Tabbar></Tabbar>
 </template>
 
 <script setup>
 import './index.scss'
-import Taro, { useRouter, nextTick } from "@tarojs/taro";
-import { onMounted, ref } from "vue";
+import Taro, {useRouter, nextTick} from "@tarojs/taro";
+import {onMounted, ref} from "vue";
 import photo from '/src/assets/A1.jpg'
 import collectIcon from 'src/assets/icons/收藏.png'
 import hasCollectIcon from 'src/assets/icons/收藏 (已收藏).png'
 import message from 'src/assets/icons/聊天.png'
-import { Message, Left, Right, Search2, MoreX, Find } from '@nutui/icons-vue-taro'
+import navigationIcon from 'src/assets/icons/导航.png'
+import {Message, Left, Right, Search2, MoreX, Find} from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
 import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment, searchPhotos } from 'src/utils/api.ts'
 import { comment } from 'postcss';
@@ -176,8 +180,8 @@ const OnCommitComment = () => {
 }
 
 const onSearch = () => {
-  Taro.navigateTo({
-    url: '/pages/history/index/index',
+  Taro.navigateBack({
+    delta: 1  // 默认就是1，不传也是返回一层
   })
 }
 
@@ -213,8 +217,7 @@ onMounted(() => {
     navList.value = navListWithoutCollect.value
     isCollect.value = false
     comments.value = []
-  }
-  else {
+  } else {
     collectJudgement({
       name: end.value,
     }).then((res) => {
@@ -241,8 +244,7 @@ onMounted(() => {
     if (res.code == 200) {
       if (res.data.comments) {
         comments.value = res.data.comments
-      }
-      else {
+      } else {
         comments.value = []
       }
       console.log('comments:', comments.value)
@@ -339,7 +341,7 @@ const onCollect = () => {
 
 }
 
-const onSelected = ({ item: item, $event: Event }) => {
+const onSelected = ({item: item, $event: Event}) => {
   console.log('onSelected:', item)
   if (item.id == 1) {
     onClickComment()
