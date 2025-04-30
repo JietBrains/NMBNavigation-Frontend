@@ -65,6 +65,7 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
         chain.plugin('unplugin-vue-components').use(Components({
           resolvers: [NutUIResolver({ taro: true })]
         }))
+        
       }
     },
     h5: {

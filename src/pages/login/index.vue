@@ -1,196 +1,179 @@
 <template>
-  <view class="login">
-    <view class="login-container">
-      <view class="avatar" style="display: flex; justify-content: center; align-items: center;">
-        <template v-if="!hasUserInfo">
-          <nut-avatar size="large" bg-color="pink">
-            <My />
-          </nut-avatar>
-        </template>
-        <template v-else>
-          <image class="userinfo-avatar" :src="userProfile.userInfo.avatarUrl" mode="cover" @tap="bindViewTap" />
-        </template>
-      </view>
-      <template v-if="!hasUserInfo">
-        <view class="title" style="text-align: center;">Hi,欢迎登录</view>
-      </template>
-      <template v-else >
-        <text class="userinfo-nickname" style="display: flex; justify-content: center; align-items: center;">{{ userProfile.userInfo.nickName }}</text>
-      </template>
-
-      <view class="form">
-        <view class="input-wrapper">
-          <nut-input class="input-item" v-model="username" placeholder="请输入账号" :border="false">
-            <template #left>
-              <Add class="input-icon" />
-            </template>
-          </nut-input>
-        </view>
-
-        <view class="input-wrapper">
-          <nut-input class="input-item" v-model="password" placeholder="请输入密码" type="password" :border="false">
-            <template #left>
-              <Find />
-            </template>
-          </nut-input>
-        </view>
-
-        <nut-space direction="vertical" fill>
-          <nut-button type="primary" plain block @click="getUserProfile">
-            获取个人信息
+  <view class="login-container">
+    <!-- 用户信息卡片 -->
+    <nut-cell-group class="user-card">
+      <view class="user-info">
+        <image class="avatar" :src="hasUserInfo ? userInfo.avatarUrl : defaultAvatar" mode="aspectFill"
+          :class="{ 'avatar-animate': hasUserInfo }" />
+        <view class="user-detail">
+          <text v-if="hasUserInfo" class="nickname">{{ userInfo.nickName }}</text>
+          <nut-button v-else type="primary" size="small" @tap="getUserProfile" class="login-btn">
+            点击登录
           </nut-button>
-
-          <nut-button type="primary" plain block @click="handleWechatLogin">
-            登录
-          </nut-button>
-        </nut-space>
-
+        </view>
       </view>
+    </nut-cell-group>
+
+    <!-- 导航按钮组 -->
+    <view class="nav-section">
+      <nut-cell-group>
+        <nut-cell title="🧭 导航页面" is-link @click="goTo('/pages/navigation/index/index')" class="nav-item" />
+        <nut-cell title="⭐ 收藏页面" is-link @click="goTo('/pages/collect/index/index')" class="nav-item" />
+        <nut-cell title="🔍 搜索页面" is-link @click="goTo('/pages/history/index/index')" class="nav-item" />
+        <nut-cell title="📝 反馈页面" is-link @click="goTo('/pages/feedback/index/index')" class="nav-item" />
+      </nut-cell-group>
     </view>
-  </view>
+
     <Tabbar :count="3"></Tabbar>
+  </view>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted } from 'vue'
+import { ref, reactive } from 'vue'
 import Taro from '@tarojs/taro'
-import { Find, Add, My } from '@nutui/icons-vue-taro'
-import { login } from 'src/utils/api.ts'
-import Tabbar from '../../components/Tabbar.vue'
+import Tabbar from 'src/components/Tabbar.vue'
 
 interface UserInfo {
   avatarUrl: string
-  city: string
-  country: string
-  gender: number
-  language: string
   nickName: string
-  province: string
 }
 
-interface UserProfile {
-  cloudID: string
-  encryptedData: string
-  errMsg: string
-  iv: string
-  rawData: string
-  signature: string
-  userInfo: UserInfo
-}
-
-const userProfile = reactive<UserProfile>({
-  cloudID: '',
-  encryptedData: '',
-  errMsg: '',
-  iv: '',
-  rawData: '',
-  signature: '',
-  userInfo: {
-    avatarUrl: '',
-    city: '',
-    country: '',
-    gender: 0,
-    language: '',
-    nickName: '',
-    province: ''
-  }
+const userInfo = reactive<UserInfo>({
+  avatarUrl: '',
+  nickName: '',
 })
-const username = ref('')
-const password = ref('')
-
 
 const hasUserInfo = ref(false)
-const canIUseGetUserProfile = ref(false)
-
-onMounted(() => {
-  canIUseGetUserProfile.value = true
-})
+const defaultAvatar = 'https://cdn.jsdelivr.net/gh/hjzts/imgs/img202505010233338.png'
 
 const getUserProfile = () => {
-  console.log('获取用户信息——getUserProfile')
   Taro.getUserProfile({
-    desc: '用于完善会员资料',
+    desc: '用于完善会员信息',
     success: (res) => {
-      console.log('获取用户信息成功', res)
-      Object.assign(userProfile, res)
+      Object.assign(userInfo, res.userInfo)
       hasUserInfo.value = true
+      // 显示登录成功提示
+      Taro.showToast({
+        title: '登录成功',
+        icon: 'success',
+        duration: 2000
+      })
     },
-    fail: (err) => {
-      console.error('获取用户信息失败', err)
-    },
-    complete: (res) => {
-      console.log('获取用户信息完成', res)
+    fail: () => {
+      Taro.showToast({
+        title: '登录失败',
+        icon: 'error',
+        duration: 2000
+      })
     }
   })
 }
 
-const handleWechatLogin = async () => {
-  try {
-    let res = await Taro.login()
-    console.log('微信登录成功:', res)
-    // console.log('微信登录 code:', code)
-    login({
-      'username': username.value,
-      'password': password.value,
-      'nickname': userProfile.userInfo.nickName,
-      'avatarurl': userProfile.userInfo.avatarUrl
-    }).then((res) => {
-      console.log('res:', res)
-      if (res.code === 200) {
-        Taro.setStorageSync('token', res.data.token)
-        Taro.showToast({
-          title: '登录成功',
-          icon: 'success',
-          duration: 2000
-        })
-      } else {
-        Taro.showToast({
-          title: '登录失败',
-          icon: 'none',
-          duration: 2000
-        })
-      }
-    }).catch((err) => {
-      console.error('登录失败:', err)
-    })
-    console.log('微信登录')
-  } catch (error) {
-    console.error('微信登录失败:', error)
-  }
-}
-
-const getUserInfo = (e: any) => {
-  // 仅作兼容：旧版不带加密信息，只返回userInfo
-  userProfile.userInfo = e.detail.userInfo
-  hasUserInfo.value = true
-}
-
-const bindViewTap = () => {
-  console.log('点击头像')
+const goTo = (url: string) => {
+  console.log(url)
+  Taro.navigateTo({ url: url })
+  // Taro.reLaunch({ url: url })
 }
 </script>
 
 <style lang="scss">
-.container {
-  padding: 20rpx;
+.login-container {
+  min-height: 100vh;
+  background-color: #f7f8fa;
+  padding: 20px;
 }
 
-.userinfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #aaa;
-}
-
-.userinfo-avatar {
+.user-card {
+  margin-bottom: 20px;
+  border-radius: 12px;
   overflow: hidden;
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-.userinfo-nickname {
-  margin-top: 20rpx;
+.user-info {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.avatar-animate {
+  animation: avatarPop 0.5s ease;
+}
+
+@keyframes avatarPop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.user-detail {
+  margin-left: 16px;
+  flex: 1;
+}
+
+.nickname {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.login-btn {
+  background: #fff !important;
+  color: #4CAF50 !important;
+  border: none !important;
+  font-weight: 500;
+  padding: 8px 20px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-section {
+  margin-top: 20px;
+}
+
+.nav-item {
+  margin-bottom: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// 自定义 NutUI 组件样式
+:deep(.nut-cell) {
+  padding: 16px !important;
+  font-size: 16px !important;
+}
+
+:deep(.nut-cell__title) {
+  font-weight: 500 !important;
+}
+
+:deep(.nut-cell__value) {
+  color: #999 !important;
 }
 </style>
