@@ -54,7 +54,7 @@
 <script setup>
 import Taro from '@tarojs/taro'
 import { ref } from 'vue'
-import style from './index.css'
+import './index.css'
 import Tabbar from '../../../components/Tabbar.vue'
 
 const description = ref('')
