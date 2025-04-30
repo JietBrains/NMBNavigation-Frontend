@@ -32,13 +32,14 @@
 import { ref, reactive } from 'vue'
 import Taro from '@tarojs/taro'
 import Tabbar from 'src/components/Tabbar.vue'
+import { login } from 'src/utils/api'
 
-interface UserInfo {
+interface SimpleUserInfo {
   avatarUrl: string
   nickName: string
 }
 
-const userInfo = reactive<UserInfo>({
+const userInfo = reactive<SimpleUserInfo>({
   avatarUrl: '',
   nickName: '',
 })
@@ -46,10 +47,87 @@ const userInfo = reactive<UserInfo>({
 const hasUserInfo = ref(false)
 const defaultAvatar = 'https://cdn.jsdelivr.net/gh/hjzts/imgs/img202505010233338.png'
 
+interface UserInfo {
+  avatarUrl: string
+  city: string
+  country: string
+  gender: number
+  language: string
+  nickName: string
+  province: string
+}
+
+interface UserProfile {
+  cloudID: string
+  encryptedData: string
+  errMsg: string
+  iv: string
+  rawData: string
+  signature: string
+  userInfo: UserInfo
+}
+
+const userProfile = reactive<UserProfile>({
+  cloudID: '',
+  encryptedData: '',
+  errMsg: '',
+  iv: '',
+  rawData: '',
+  signature: '',
+  userInfo: {
+    avatarUrl: '',
+    city: '',
+    country: '',
+    gender: 0,
+    language: '',
+    nickName: '',
+    province: ''
+  }
+})
+const username = ref('')
+const password = ref('')
+
+interface LoginResponse {
+  code: number
+  data: {
+    token: string
+  }
+}
+
 const getUserProfile = () => {
   Taro.getUserProfile({
     desc: '用于完善会员信息',
-    success: (res) => {
+    success: async (res) => {
+      try {
+        let loginRes = await Taro.login()
+        console.log('微信登录成功:', loginRes)
+        
+        const res2 = await login({
+          'username': username.value,
+          'password': password.value,
+          'nickname': userProfile.userInfo.nickName,
+          'avatarurl': userProfile.userInfo.avatarUrl
+        }) as LoginResponse
+
+        console.log('res:', res2)
+        if (res2.code === 200) {
+          Taro.setStorageSync('token', res2.data.token)
+          Taro.showToast({
+            title: '登录成功',
+            icon: 'success',
+            duration: 2000
+          })
+        } else {
+          Taro.showToast({
+            title: '登录失败',
+            icon: 'none',
+            duration: 2000
+          })
+        }
+      } catch (error) {
+        console.error('登录失败:', error)
+      }
+
       Object.assign(userInfo, res.userInfo)
       hasUserInfo.value = true
       // 显示登录成功提示
@@ -84,26 +162,28 @@ const goTo = (url: string) => {
 }
 
 .user-card {
-  margin-bottom: 20px;
-  border-radius: 12px;
+  margin-bottom: 24px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  padding: 16px;
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  padding: 40px;
+  background: linear-gradient(135deg, #bce4ee 0%, #86d88a 100%);
+  min-height: 180px;
 }
 
 .avatar {
-  width: 60px;
-  height: 60px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  border: 3px solid #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 6px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
   transition: all 0.3s ease;
+  object-fit: cover;
 }
 
 .avatar-animate {
@@ -127,25 +207,42 @@ const goTo = (url: string) => {
 }
 
 .user-detail {
-  margin-left: 16px;
+  margin-left: 40px;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .nickname {
   color: #fff;
-  font-size: 18px;
-  font-weight: 500;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-size: 32px;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 16px;
+  display: block;
+  letter-spacing: 1px;
 }
 
 .login-btn {
   background: #fff !important;
   color: #4CAF50 !important;
   border: none !important;
-  font-weight: 500;
-  padding: 8px 20px;
-  border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+  padding: 16px 40px;
+  border-radius: 32px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  font-size: 20px;
+  margin-top: 16px;
+  width: fit-content;
+  min-width: 180px;
+  text-align: center;
+  transition: all 0.3s ease;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
 }
 
 .nav-section {
