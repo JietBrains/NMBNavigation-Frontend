@@ -49,7 +49,7 @@ const tabSwitch = (item: Record<string, unknown>, index: number) => {
     Taro.reLaunch({url: '/pages/collect/index/index'})
   } else if (index == 3) {
     console.log(666666666)
-    Taro.reLaunch({url: '/pages/about/index'})
+    Taro.reLaunch({url: '/pages/login/index'})
   }
   // userStore.setIndex(index)
 }

@@ -148,9 +148,6 @@ const OnCommitComment = () => {
       title: '请先登录',
       icon: 'none',
     })
-    Taro.navigateTo({
-      url: '/pages/login/index',
-    })
     return
   }
   if (textareaValue.value.trim() === '') {
@@ -270,9 +267,6 @@ const onClickComment = () => {
       title: '请先登录',
       icon: 'none',
     })
-    Taro.navigateTo({
-      url: '/pages/login/index',
-    })
     return
   }
   showPopup.value = true
@@ -303,9 +297,6 @@ const onCollect = () => {
     Taro.showToast({
       title: '请先登录',
       icon: 'none',
-    })
-    Taro.navigateTo({
-      url: '/pages/login/index',
     })
     return
   }
