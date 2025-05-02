@@ -7,7 +7,7 @@ const viewAllPhotoOnMainPage = (data: any) => {
 
 //搜索一个地点的图片和信息
 const searchPhotos = (data: any) => {
-    return get('/search/place', data)
+    return get('/images/search', data)
 }
 
 // 收藏

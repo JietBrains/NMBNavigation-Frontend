@@ -55,6 +55,7 @@ onMounted(() => {
   console.log('hasLogin', hasLogin.value)
   if (hasLogin.value) {
     loadSearchHistory().then(res => {
+      console.log('loadSearchHistory', res.data)
       if (res.code === 200) {
         console.log('loadSearchHistory', res.data)
         history.value = res.data

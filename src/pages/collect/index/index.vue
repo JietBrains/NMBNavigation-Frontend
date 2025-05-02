@@ -14,6 +14,9 @@
           </nut-cell>
         </view>
       </view>
+      <view v-if="!allItems.length">
+        <nut-empty image="empty" description="empty"></nut-empty>
+      </view>
     </view>
   </view>
   <Tabbar :count="2"></Tabbar>

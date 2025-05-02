@@ -56,6 +56,7 @@ import Taro from '@tarojs/taro'
 import { ref } from 'vue'
 import './index.css'
 import Tabbar from '../../../components/Tabbar.vue'
+import { uploadFeedback } from 'src/utils/api'
 
 const description = ref('')
 const phone = ref('')
@@ -86,6 +87,37 @@ const submit = () => {
     email: email.value,
     image: imageUrl.value
   })
+  if (!description.value) {
+    Taro.showToast({
+      title: '请填写问题描述',
+      icon: 'none'
+    });
+    return;
+  }
+  uploadFeedback({
+    description: description.value,
+    phone: phone.value,
+    email: email.value,
+    image: imageList.value
+  }).then((res) => {
+    if (res.code === 200) {
+      Taro.showToast({
+        title: '反馈提交成功',
+        icon: 'success'
+      });
+    } else {
+      Taro.showToast({
+        title: '提交失败，请稍后再试',
+        icon: 'none'
+      });
+    }
+  }).catch((err) => {
+    console.error(err);
+    Taro.showToast({
+      title: '网络错误，请稍后再试',
+      icon: 'none'
+    });
+  });
 }
 </script>
 

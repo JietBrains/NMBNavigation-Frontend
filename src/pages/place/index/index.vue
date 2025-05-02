@@ -92,7 +92,6 @@ import navigationIcon from 'src/assets/icons/导航.png'
 import {Message, Left, Right, Search2, MoreX, Find} from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
 import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment, searchPhotos } from 'src/utils/api.ts'
-import { comment } from 'postcss';
 import Tabbar from '../../../components/Tabbar.vue'
 
 const imgList = ref()
@@ -198,7 +197,7 @@ onMounted(() => {
   }).then((res) => {
     console.log('searchPhotos:', res)
     if (res.code == 200) {
-      imgList.value = res.data.images
+      imgList.value = res.data.target
       swiperList.value = imgList.value.map(url => ({ src: url }))
     } else {
       imgList.value = [photo]
@@ -241,6 +240,9 @@ onMounted(() => {
     if (res.code == 200) {
       if (res.data.comments) {
         comments.value = res.data.comments
+        comments.value.forEach((item) => {
+          item.time = item.time.substring(0, 10)
+        })
       } else {
         comments.value = []
       }
