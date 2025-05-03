@@ -28,21 +28,6 @@
       </view>
     </view>
 
-
-    <!-- 联系方式 -->
-    <view class="section">
-      <text class="label">联系方式</text>
-      <view class="input-group">
-        <text class="icon">📞</text>
-        <input class="input" type="text" v-model="phone" placeholder="手机号" />
-      </view>
-      <view class="input-group">
-        <text class="icon">✉️</text>
-        <input class="input" type="text" v-model="email" placeholder="邮箱" />
-      </view>
-    </view>
-
-
     <!-- 提交按钮 -->
     <view class="footer">
       <nut-button type="primary" size="large" @click="submit">提交</nut-button>
@@ -83,8 +68,8 @@ const removeImage = (index) => {
 const submit = () => {
   console.log({
     description: description.value,
-    phone: phone.value,
-    email: email.value,
+    phone: "",
+    email: "",
     image: imageUrl.value
   })
   if (!description.value) {
