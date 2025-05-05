@@ -17,7 +17,7 @@
     <!-- 导航按钮组 -->
     <view class="nav-section">
       <nut-cell-group>
-        <nut-cell title="🧭 导航页面" is-link @click="goTo('/pages/navigation/index/index')" class="nav-item" />
+        <nut-cell title="🧭 首页" is-link @click="goTo('/pages/map/index/index')" class="nav-item" />
         <nut-cell title="⭐ 收藏页面" is-link @click="goTo('/pages/collect/index/index')" class="nav-item" />
         <nut-cell title="🔍 搜索页面" is-link @click="goTo('/pages/history/index/index')" class="nav-item" />
         <nut-cell title="📝 反馈页面" is-link @click="goTo('/pages/feedback/index/index')" class="nav-item" />

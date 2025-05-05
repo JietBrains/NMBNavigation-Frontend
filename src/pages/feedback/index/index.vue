@@ -33,7 +33,7 @@
       <nut-button type="primary" size="large" @click="submit">提交</nut-button>
     </view>
   </view>
-    <Tabbar></Tabbar>
+    <Tabbar :count="3"></Tabbar>
 </template>
 
 <script setup>
