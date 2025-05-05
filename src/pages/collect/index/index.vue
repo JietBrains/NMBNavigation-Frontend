@@ -6,10 +6,10 @@
         <view class="info" @tap="goToLocation(item)">
           <nut-cell :title="item.floor + '　' + item.building + '　' + item.name">
             <template #icon>
-              <image src="/assets/icons/收藏 (已收藏).png" class="icon" />
+              <image src="/assets/icons/收藏 (已收藏).png" class="icon"/>
             </template>
             <template #link>
-              <image src="/assets/icons/设置.png" class="icon" @tap.stop="onChange(item)" />
+              <image src="/assets/icons/设置.png" class="icon" @tap.stop="onChange(item)"/>
             </template>
           </nut-cell>
         </view>
@@ -23,11 +23,11 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import {ref, computed, onMounted} from 'vue'
 import Taro from '@tarojs/taro'
 import collectIcon from 'src/assets/icons/收藏 (已收藏).png'
 import change from 'src/assets/icons/设置.png'
-import { getAllCollection, topCollection, deleteCollection } from 'src/utils/api.ts'
+import {getAllCollection, topCollection, deleteCollection} from 'src/utils/api.ts'
 import Tabbar from '../../../components/Tabbar.vue'
 
 // 收藏数据
@@ -51,12 +51,31 @@ const onChange = (item) => {
     success(res) {
       console.log(item.name)
       if (res.tapIndex == 0) {
-        topCollection({ 'name': item.name }).then(res => {
+        topCollection({'name': item.name}).then(res => {
           console.log('topCollection', res)
           if (res.code === 200) {
             Taro.showToast({
               title: '置顶成功',
               icon: 'success'
+            })
+            getAllCollection().then(res => {
+              console.log('getAllCollection', res)
+              if (res.code === 200) {
+                allItems.value=[]
+                res.data.collects.forEach((item, index) => {
+                  const id = index + 1;
+                  const building = item[0] + '座';
+                  const floor = item[1] + '层';
+                  const name = item;
+                  allItems.value.push({id, floor, building, name});
+                })
+                console.log('allItems', allItems.value)
+              } else {
+                Taro.showToast({
+                  title: '获取收藏数据失败',
+                  icon: 'none'
+                })
+              }
             })
           } else {
             Taro.showToast({
@@ -66,7 +85,7 @@ const onChange = (item) => {
           }
         })
       } else if (res.tapIndex == 1) {
-        deleteCollection({ 'name': item.name }).then(res => {
+        deleteCollection({'name': item.name}).then(res => {
           if (res.code === 200) {
             Taro.showToast({
               title: '删除成功',
@@ -110,7 +129,7 @@ onMounted(() => {
         const building = item[0] + '座';
         const floor = item[1] + '层';
         const name = item;
-        allItems.value.push({ id, floor, building, name });
+        allItems.value.push({id, floor, building, name});
       })
       console.log('allItems', allItems.value)
     } else {
