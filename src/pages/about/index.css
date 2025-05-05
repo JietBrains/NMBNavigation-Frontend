@@ -1,0 +1,44 @@
+.about-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 60rpx;
+}
+
+.avatar {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background-color: #eee;
+  margin-bottom: 20rpx;
+}
+
+.nickname {
+  font-size: 32rpx;
+  color: #333;
+}
+
+.nav-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.nav-btn {
+  background-color: #f8f8f8;
+  color: #333;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  text-align: center;
+  font-size: 30rpx;
+}
+
+/*# sourceMappingURL=index.css.map */

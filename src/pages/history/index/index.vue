@@ -2,7 +2,7 @@
   <view class="container">
     <view class="search-bar">
       <image src="/assets/icons/搜索/搜索.png" class="icon" />
-      <input class="search-input" v-model="keyword" placeholder="搜索教室、厕所、售货机" @confirm="onSearch" disabled="true"
+      <input class="search-input" v-model="keyword" placeholder="搜索教室" @confirm="onSearch" disabled="true"
         @tap="cascaderVisible = true" />
       <view class="search-btn" @tap="onSearch">搜索</view>
     </view>
