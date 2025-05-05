@@ -3,10 +3,10 @@
     <!-- 用户信息卡片 -->
     <nut-cell-group class="user-card">
       <view class="user-info">
-        <image class="avatar" :src="hasUserInfo ? userInfo.avatarUrl : defaultAvatar" mode="aspectFill"
-          :class="{ 'avatar-animate': hasUserInfo }" />
+        <image class="avatar" :src="hasLogin ? userInfo.avatarUrl : defaultAvatar" mode="aspectFill"
+          :class="{ 'avatar-animate': hasLogin }" />
         <view class="user-detail">
-          <text v-if="hasUserInfo" class="nickname">{{ userInfo.nickName }}</text>
+          <text v-if="hasLogin" class="nickname">{{ userInfo.nickName }}</text>
           <nut-button v-else type="primary" size="small" @tap="getUserProfile" class="login-btn">
             点击登录
           </nut-button>
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import Taro from '@tarojs/taro'
 import Tabbar from 'src/components/Tabbar.vue'
 import { login } from 'src/utils/api'
@@ -44,7 +44,7 @@ const userInfo = reactive<SimpleUserInfo>({
   nickName: '',
 })
 
-const hasUserInfo = ref(false)
+const hasLogin = ref(false)
 const defaultAvatar = 'https://cdn.jsdelivr.net/gh/hjzts/imgs/img202505010233338.png'
 
 interface UserInfo {
@@ -94,6 +94,27 @@ interface LoginResponse {
   }
 }
 
+onMounted(() => {
+  // 检查是否已登录
+  const token = Taro.getStorageSync('token')
+  if (token) {
+    hasLogin.value = true
+    console.log('已登录，token:', token)
+  } else {
+    hasLogin.value = false
+    console.log('未登录')
+  }
+  // 获取用户信息
+  const userInfoFromStorage = Taro.getStorageSync('userInfo')
+  if (userInfoFromStorage) {
+    userInfo.avatarUrl = userInfoFromStorage.avatarUrl
+    userInfo.nickName = userInfoFromStorage.nickName
+  } else {
+    userInfo.avatarUrl = defaultAvatar
+    userInfo.nickName = '点击登录'
+  }
+})
+
 const getUserProfile = () => {
   Taro.getUserProfile({
     desc: '用于完善会员信息',
@@ -129,7 +150,9 @@ const getUserProfile = () => {
       }
 
       Object.assign(userInfo, res.userInfo)
-      hasUserInfo.value = true
+      Taro.setStorageSync('userInfo', userInfo)
+      console.log('userInfo:', userInfo)
+      hasLogin.value = true
       // 显示登录成功提示
       Taro.showToast({
         title: '登录成功',
