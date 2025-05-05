@@ -30,8 +30,8 @@
           <nut-cell v-for="(comment, index) in comments" :key="index" :title="comment.user"
             :sub-title="comment.description" size="large" :desc="comment.time">
             <template #icon>
-              <nut-avatar size="small">
-                <image :src="comment.avatar" />
+              <nut-avatar size="small"> 
+                <img :src=comment.avatar /> 
               </nut-avatar>
             </template>
           </nut-cell>
@@ -232,25 +232,39 @@ onMounted(() => {
     })
   }
 
-  getComment({
-    name: end.value.substring(0, 2),
-  }).then((res) => {
-    console.log('getComment:', res)
-    if (res.code == 200) {
-      if (res.data.comments) {
-        comments.value = res.data.comments
-        comments.value.forEach((item) => {
-          item.time = item.time.substring(0, 10)
-        })
-      } else {
-        comments.value = []
-      }
-      console.log('comments:', comments.value)
-    }
-  }).catch((err) => {
-    console.error('Error:', err)
-    comments.value = []
-  })
+  // getComment({
+  //   name: end.value.substring(0, 2),
+  // }).then((res) => {
+  //   console.log('getComment:', res)
+  //   if (res.code == 200) {
+  //     if (res.data.comments) {
+  //       comments.value = res.data.comments
+  //       comments.value.forEach((item) => {
+  //         item.time = item.time.substring(0, 10)
+  //       })
+  //     } else {
+  //       comments.value = []
+  //     }
+  //     console.log('comments:', comments.value)
+  //   }
+  // }).catch((err) => {
+  //   console.error('Error:', err)
+  //   comments.value = []
+  // })
+  comments.value = [
+    {
+      user: '测试用户1',
+      description: '这是一条用于测试的信息',
+      time: '2025-05-03',
+      avatar: 'https://api.dicebear.com/7.x/bottts/png?seed=42'
+    },
+    {
+      user: '测试用户2',
+      description: '大苏打3213打算但啊实打实大苏打1564打8打',
+      time: '2023-04-29',
+      avatar: 'https://api.dicebear.com/7.x/bottts/png?seed=43'
+    },
+  ]
 })
 
 const confirm = () => {
