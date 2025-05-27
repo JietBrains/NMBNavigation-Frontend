@@ -26,16 +26,23 @@
       </view>
 
       <view class="comment-section">
-        <nut-cell-group title="用户评论">
-          <nut-cell v-for="(comment, index) in comments" :key="index" :title="comment.user"
-            :sub-title="comment.description" size="large" :desc="comment.time">
-            <template #icon>
-              <nut-avatar size="small"> 
-                <img :src=comment.avatar /> 
-              </nut-avatar>
-            </template>
-          </nut-cell>
-        </nut-cell-group>
+        <view class="section-title">用户评论（{{ comments.length }}）</view>
+        <view class="comment-list">
+          <view class="comment-item" v-for="(item, index) in comments" :key="index">
+            <image class="avatar" :src="item.avatar" mode="aspectFill" />
+            <view class="comment-content">
+              <view class="comment-header">
+                <text class="username">{{ item.user }}</text>
+                <text class="time">{{ item.time }}</text>
+              </view>
+              <text class="comment-text">{{ item.description }}</text>
+              <scroll-view scroll-x class="image-list" v-if="item.images.length">
+                <image v-for="(img, imgIndex) in item.images" :key="imgIndex" :src="img" class="comment-image"
+                  mode="aspectFill" @click="previewImage(item.images, imgIndex)" />
+              </scroll-view>
+            </view>
+          </view>
+        </view>
       </view>
 
     </scroll-view>
@@ -65,12 +72,18 @@
         <span class="text">导航</span>
       </template>
     </nut-fixed-nav>
-    <nut-popup v-model:visible="showPopup" position="bottom">
-      <nut-textarea v-model="textareaValue" :limit-show="true" :max-length="25" placeholder="请输入评论" />
+    <nut-popup v-model:visible="showPopup" position="bottom" @close="closePopup">
+      <nut-textarea v-model="formData.description" :limit-show="true" :max-length="25" placeholder="请输入评论" />
+      <nut-uploader name="images" :data="formData" :maximize="1024 * 1024 * 5" :media-type="[image]"
+        url="http://8.140.200.27:8080/comment/upload" maximum="3" :auto-upload="false" ref="uploadRef"
+        :headers="header" @oversize="onOversize" @success="onUploadSuccess" @failure="onUploadFailure"></nut-uploader>
+      <br />
       <view class="popup-buttons">
         <nut-button type="primary" size='normal' @click="OnCommitComment">提交</nut-button>
       </view>
     </nut-popup>
+
+
     <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置"
       :options="options"></nut-cascader>
   </view>
@@ -92,6 +105,7 @@ import { collectJudgement, uploadCollection, deleteCollection, getComment, uploa
 import Tabbar from '../../../components/Tabbar.vue'
 
 const imgList = ref()
+const uploadRef = ref(null);
 const swiperList = ref()
 const showInput = ref(false)
 const showPopup = ref(false)
@@ -108,6 +122,10 @@ const comments = ref([]);
 const fixedNavvisible = ref(false)
 const navList = ref([])
 const end = ref('')
+const header = ref({
+  'Content-Type': 'multipart/form-data',
+  'Authorization': Taro.getStorageSync('token') || ''
+})
 const navListWithCollect = ref([
   {
     id: 1,
@@ -138,38 +156,14 @@ const navigateToPlace = () => {
   showInput.value = true
 }
 
-const OnCommitComment = () => {
-  if (!hasLogin.value) {
-    Taro.showToast({
-      title: '请先登录',
-      icon: 'none',
-    })
-    return
-  }
-  if (textareaValue.value.trim() === '') {
-    Taro.showToast({
-      title: '评论内容不能为空',
-      icon: 'none',
-    })
+const formData = ref({
+  name: '',
+  description: ''
+});
 
-  }
-  uploadComment({
-    name: end.value.substring(0, 2),
-    description: textareaValue.value,
-    images: [],
-  }).then((res) => {
-    console.log('uploadComment:', res)
-    if (res.code == 200) {
-      Taro.showToast({
-        title: '评论成功',
-        icon: 'success',
-      })
-      textareaValue.value = ''
-      showPopup.value = false
-    }
-  }).catch((err) => {
-    console.error('Error:', err)
-  })
+const OnCommitComment = () => {
+  uploadRef.value.submit();
+
 }
 
 const onSearch = () => {
@@ -184,6 +178,7 @@ const cancel = () => {
 
 onMounted(() => {
   hasLogin.value = Taro.getStorageSync('token') ? true : false
+  formData.value.name = Taro.getStorageSync('username') || '游客'
   const instance = Taro.getCurrentInstance()
   const params = (instance && instance.router && instance.router.params) || {};
   end.value = params.name || ''
@@ -232,39 +227,41 @@ onMounted(() => {
     })
   }
 
-  // getComment({
-  //   name: end.value.substring(0, 2),
-  // }).then((res) => {
-  //   console.log('getComment:', res)
-  //   if (res.code == 200) {
-  //     if (res.data.comments) {
-  //       comments.value = res.data.comments
-  //       comments.value.forEach((item) => {
-  //         item.time = item.time.substring(0, 10)
-  //       })
-  //     } else {
-  //       comments.value = []
-  //     }
-  //     console.log('comments:', comments.value)
+  getComment({
+    name: end.value.substring(0, 2),
+  }).then((res) => {
+    console.log('getComment:', res)
+    if (res.code == 200) {
+      if (res.data.comments) {
+        comments.value = res.data.comments
+        comments.value.forEach((item) => {
+          item.time = item.time.substring(0, 10)
+        })
+      } else {
+        comments.value = []
+      }
+      console.log('comments:', comments.value)
+    }
+  }).catch((err) => {
+    console.error('Error:', err)
+    comments.value = []
+  })
+  // comments.value = [
+  //   {
+  //     user: '测试用户1',
+  //     description: '这是一条带图片的评论',
+  //     time: '2025-05-03',
+  //     avatar: 'https://api.dicebear.com/7.x/bottts/png?seed=42',
+  //     images: ['http://8.140.200.27:5000/images/94c79076-a677-4bd7-8f5c-0ac3c73e6617.png', 'http://8.140.200.27:5000/images/ed35cdfc-5689-422e-88fd-bd1e6d203806.png'] // 新增图片数组
+  //   },
+  //   {
+  //     user: '测试用户2',
+  //     description: '无图片评论',
+  //     time: '2023-04-29',
+  //     avatar: 'https://api.dicebear.com/7.x/bottts/png?seed=43',
+  //     images: [] // 空数组表示无图片
   //   }
-  // }).catch((err) => {
-  //   console.error('Error:', err)
-  //   comments.value = []
-  // })
-  comments.value = [
-    {
-      user: '测试用户1',
-      description: '这是一条用于测试的信息',
-      time: '2025-05-03',
-      avatar: 'https://api.dicebear.com/7.x/bottts/png?seed=42'
-    },
-    {
-      user: '测试用户2',
-      description: '大苏打3213打算但啊实打实大苏打1564打8打',
-      time: '2023-04-29',
-      avatar: 'https://api.dicebear.com/7.x/bottts/png?seed=43'
-    },
-  ]
+  // ]
 })
 
 const confirm = () => {
@@ -304,6 +301,14 @@ const showFn = (index) => {
 
 const swiperOnChange = (index) => {
   currentIndex.value = index
+}
+
+const closePopup = () => {
+  showPopup.value = false
+  nextTick(() => {
+    formData.value.description = ''
+    uploadRef.value.clearUploadQueue();
+  })
 }
 
 const onCollect = () => {
@@ -359,6 +364,52 @@ const onSelected = ({ item: item, $event: Event }) => {
       navList.value = navListWithoutCollect.value
     }
   }
+}
+
+const onOversize = (file) => {
+  Taro.showToast({
+    title: `文件 ${file.name} 超过5MB限制大小`,
+    icon: 'none',
+  });
+}
+
+const onUploadSuccess = () => {
+  Taro.showToast({
+    title: '评论提交成功',
+    icon: 'success',
+  });
+  showPopup.value = false;
+  nextTick(() => {
+    formData.value.description = '';
+    uploadRef.value.clearUploadQueue();
+  });
+  // 刷新评论列表
+  getComment({
+    name: end.value
+  }).then((res) => {
+    console.log('getComment:', res)
+    if (res.code == 200) {
+      if (res.data.comments) {
+        comments.value = res.data.comments
+        comments.value.forEach((item) => {
+          item.time = item.time.substring(0, 10)
+        })
+      } else {
+        comments.value = []
+      }
+      console.log('comments:', comments.value)
+    }
+  }).catch((err) => {
+    console.error('Error:', err)
+    comments.value = []
+  })
+}
+
+const onUploadFailure = (file) => {
+  Taro.showToast({
+    title: `文件上传失败`,
+    icon: 'none',
+  });
 }
 </script>
 

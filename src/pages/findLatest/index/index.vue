@@ -2,18 +2,17 @@
   <view class="latest-choose">
     <view class="choose-label">寻找最近设施</view>
     <view class="choose-items-wrapper">
-      <view class="choose-item" @tap="toggleImageSelection('toilet')">
+      <view class="choose-item" @tap="showInput = true">
         <image src="../../../assets/icons/寻找最近/厕所.png" class="choose-image" mode="aspectFit"
                :class="{ 'selected': selectedImage === 'toilet' }"/>
         <view class="choose-text">厕所</view>
       </view>
-      <view class="choose-item" @tap="toggleImageSelection('vendingMachine')">
+      <view class="choose-item" @tap="showInput = true">
         <image src="../../../assets/icons/寻找最近/售货机.png" class="choose-image" mode="aspectFit"
                :class="{ 'selected': selectedImage === 'vendingMachine' }"/>
         <view class="choose-text">售货机</view>
       </view>
     </view>
-    <nut-button type="primary" @click="showInput = true" :disabled="!selectedImage">确认</nut-button>
   </view>
   <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置"
                 :options="options"></nut-cascader>

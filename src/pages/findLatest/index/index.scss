@@ -15,15 +15,16 @@ page {
     /* 水平居中 */
     width: 80%;
     /* 加大左右宽度，可根据需要调整 */
-    border: 1px solid #ccc;
-    border-radius: 10px;
     padding: 10px;
     flex-direction: column
 }
 
 .choose-items-wrapper {
     display: flex;
+    flex-direction: column; /* 添加这一行：改为纵向排列 */
     justify-content: center;
+    align-items: center;    
+    gap: 20px;  
 }
 
 .choose-item {
@@ -35,15 +36,15 @@ page {
 }
 
 .choose-image {
-    width: 6rem;
-    height: 6rem;
-    margin-bottom: 0.5rem;
+    width: 30rem;
+    height: 10rem;
+    margin-bottom: 1rem;
 }
 
 .choose-label {
     width: 100%;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     /* 可根据需要调整文字与图片的间距 */
     font-size: 50px;
     /* 可根据需要调整文字大小 */
@@ -70,9 +71,6 @@ page {
 
 /* 选中图片样式 */
 .selected {
-    outline: 2px dashed #ff0000;
-    /* 使用虚线边框 */
-    outline-offset: 5px;
     border-radius: 5px;
     /* 添加阴影 */
     transition: all 0.3s ease;
