@@ -162,6 +162,13 @@ const formData = ref({
 });
 
 const OnCommitComment = () => {
+  if (!hasLogin.value) {
+    Taro.showToast({
+      title: '请先登录',
+      icon: 'none',
+    })
+    return
+  }
   uploadRef.value.submit();
 
 }
@@ -228,8 +235,9 @@ onMounted(() => {
   }
 
   getComment({
-    name: end.value.substring(0, 2),
+    name: end.value,
   }).then((res) => {
+    console.log('name', end.value)
     console.log('getComment:', res)
     if (res.code == 200) {
       if (res.data.comments) {
