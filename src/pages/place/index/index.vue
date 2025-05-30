@@ -73,7 +73,7 @@
     </nut-fixed-nav>
     <nut-popup v-model:visible="showPopup" position="bottom" @close="closePopup">
       <nut-textarea v-model="formData.description" :limit-show="true" :max-length="25" placeholder="请输入评论" />
-      <nut-uploader name="images" :data="formData" :maximize="1024 * 1024 * 5"
+      <nut-uploader name="images" :data="formData" :maximize="1024 * 1024 * 5" maximum="1"
         url="http://8.140.200.27:8080/comment/upload" :auto-upload="false" ref="uploadRef" :headers="header"
         @oversize="onOversize" @success="onUploadSuccess" @failure="onUploadFailure" @change="handleFileChange"
         @delete="handleFileDelete"></nut-uploader>
