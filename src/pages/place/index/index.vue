@@ -36,10 +36,9 @@
                 <text class="time">{{ item.time }}</text>
               </view>
               <text class="comment-text">{{ item.description }}</text>
-              <scroll-view scroll-x class="image-list" v-if="item.images.length">
-                <image v-for="(img, imgIndex) in item.images" :key="imgIndex" :src="img" class="comment-image"
-                  mode="aspectFill" @click="previewImage(item.images, imgIndex)" />
-              </scroll-view>
+              <view class="image-list" v-if="item.images.length">
+                <image v-if="item.images" :src="item.images" class="comment-image" mode="aspectFill" />
+              </view>
             </view>
           </view>
         </view>
@@ -74,9 +73,10 @@
     </nut-fixed-nav>
     <nut-popup v-model:visible="showPopup" position="bottom" @close="closePopup">
       <nut-textarea v-model="formData.description" :limit-show="true" :max-length="25" placeholder="请输入评论" />
-      <nut-uploader name="images" :data="formData" :maximize="1024 * 1024 * 5" :media-type="[image]"
-        url="http://8.140.200.27:8080/comment/upload" maximum="3" :auto-upload="false" ref="uploadRef"
-        :headers="header" @oversize="onOversize" @success="onUploadSuccess" @failure="onUploadFailure"></nut-uploader>
+      <nut-uploader name="images" :data="formData" :maximize="1024 * 1024 * 5"
+        url="http://8.140.200.27:8080/comment/upload" :auto-upload="false" ref="uploadRef" :headers="header"
+        @oversize="onOversize" @success="onUploadSuccess" @failure="onUploadFailure" @change="handleFileChange"
+        @delete="handleFileDelete"></nut-uploader>
       <br />
       <view class="popup-buttons">
         <nut-button type="primary" size='normal' @click="OnCommitComment">提交</nut-button>
@@ -103,6 +103,7 @@ import { Message, Left, Right, Search2, MoreX, Find } from '@nutui/icons-vue-tar
 import building from 'src/assets/building.json'
 import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment, searchPhotos } from 'src/utils/api.ts'
 import Tabbar from '../../../components/Tabbar.vue'
+import { Uploader } from '@nutui/nutui-taro';
 
 const imgList = ref()
 const uploadRef = ref(null);
@@ -122,6 +123,7 @@ const comments = ref([]);
 const fixedNavvisible = ref(false)
 const navList = ref([])
 const end = ref('')
+const fileNumber = ref(0)
 const header = ref({
   'Content-Type': 'multipart/form-data',
   'Authorization': Taro.getStorageSync('token') || ''
@@ -169,8 +171,67 @@ const OnCommitComment = () => {
     })
     return
   }
-  uploadRef.value.submit();
-
+  if (!formData.value.description) {
+    Taro.showToast({
+      title: '评论内容不能为空',
+      icon: 'none',
+    })
+    return
+  }
+  formData.value.name = end.value
+  if (fileNumber.value === 0) {
+    uploadComment({
+      name: formData.value.name,
+      description: formData.value.description
+    }).then((res) => {
+      console.log('uploadComment:', res)
+      if (res.code == 200) {
+        Taro.showToast({
+          title: '评论提交成功',
+          icon: 'success',
+        });
+        showPopup.value = false;
+        nextTick(() => {
+          formData.value.description = '';
+          uploadRef.value.clearUploadQueue();
+        });
+        // 刷新评论列表
+        getComment({
+          name: end.value
+        }).then((res) => {
+          console.log('getComment:', res)
+          if (res.code == 200) {
+            if (res.data.comments) {
+              comments.value = res.data.comments
+              comments.value.forEach((item) => {
+                item.time = item.time.substring(0, 10)
+              })
+            } else {
+              comments.value = []
+            }
+            console.log('comments:', comments.value)
+          }
+        }).catch((err) => {
+          console.error('Error:', err)
+          comments.value = []
+        })
+      } else {
+        Taro.showToast({
+          title: '评论提交失败',
+          icon: 'none',
+        });
+      }
+    }).catch((err) => {
+      console.error('Error:', err)
+      Taro.showToast({
+        title: '评论提交失败',
+        icon: 'none',
+      });
+    });
+  }
+  else {
+    uploadRef.value.submit()
+  }
 }
 
 const onSearch = () => {
@@ -256,18 +317,18 @@ onMounted(() => {
   })
   // comments.value = [
   //   {
-  //     user: '测试用户1',
+  //     user: '',
   //     description: '这是一条带图片的评论',
   //     time: '2025-05-03',
-  //     avatar: 'https://api.dicebear.com/7.x/bottts/png?seed=42',
-  //     images: ['http://8.140.200.27:5000/images/94c79076-a677-4bd7-8f5c-0ac3c73e6617.png', 'http://8.140.200.27:5000/images/ed35cdfc-5689-422e-88fd-bd1e6d203806.png'] // 新增图片数组
+  //     avatar: '',
+  //     images: "http://8.140.200.27:5000/images/d9599d16-d9eb-4781-8d06-8a7f031532ca.png" // 新增图片数组
   //   },
   //   {
   //     user: '测试用户2',
   //     description: '无图片评论',
   //     time: '2023-04-29',
   //     avatar: 'https://api.dicebear.com/7.x/bottts/png?seed=43',
-  //     images: [] // 空数组表示无图片
+  //     images:  ""// 空数组表示无图片
   //   }
   // ]
 })
@@ -418,6 +479,16 @@ const onUploadFailure = (file) => {
     title: `文件上传失败`,
     icon: 'none',
   });
+}
+
+const handleFileChange = (files) => {
+  fileNumber.value = files.fileList.length; // 获取文件数量
+  console.log('文件数量:', files.fileList.length); // 直接访问 length 属性
+}
+
+const handleFileDelete = (file) => {
+  fileNumber.value -= 1; // 删除文件时减少数量
+  console.log('删除文件后数量:', fileNumber.value);
 }
 </script>
 

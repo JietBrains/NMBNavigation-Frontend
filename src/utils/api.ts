@@ -49,7 +49,7 @@ const deleteCollection = (data: any) => {
 // 上传评论
 const uploadComment = (data: any) => {
     console.log(data)
-    return post('/comment/upload', data)
+    return queryPost('/comment/upload', data)
 }
 
 // 查看一个地点的评论
