@@ -1,5 +1,6 @@
 <template>
   <nut-image-preview :show="showPreview" :images="swiperList" :init-no="currentIndex" @close="hideFn" />
+  <nut-image-preview :show="showUserPicture" :images="showedPicture" @close="showUserPicture = false" />
   <view class="container">
     <nut-searchbar disabled="true" @click="onSearch">
       <template #rightin>
@@ -37,7 +38,7 @@
               </view>
               <text class="comment-text">{{ item.description }}</text>
               <view class="image-list" v-if="item.images.length">
-                <image v-if="item.images" :src="item.images" class="comment-image" mode="aspectFill" />
+                <image v-if="item.images" :src="item.images" class="comment-image" mode="aspectFill" @tap="toShowPicture(item)"/>
               </view>
             </view>
           </view>
@@ -116,6 +117,7 @@ const swiperRef = ref()
 const options = ref(building)
 const cascaderValue = ref([])
 const showPreview = ref(false)
+const showUserPicture = ref(false)
 const currentIndex = ref(0)
 const isCollect = ref(false)
 const hasLogin = ref(true)
@@ -124,6 +126,7 @@ const fixedNavvisible = ref(false)
 const navList = ref([])
 const end = ref('')
 const fileNumber = ref(0)
+const showedPicture = ref([{ src: 'https://api.dicebear.com/7.x/bottts/png?seed=43' }])
 const header = ref({
   'Content-Type': 'multipart/form-data',
   'Authorization': Taro.getStorageSync('token') || ''
@@ -489,6 +492,11 @@ const handleFileChange = (files) => {
 const handleFileDelete = (file) => {
   fileNumber.value -= 1; // 删除文件时减少数量
   console.log('删除文件后数量:', fileNumber.value);
+}
+
+const toShowPicture = (item) => {
+  showedPicture.value[0] = { src: item.images || 'https://api.dicebear.com/7.x/bottts/png?seed=43' };
+  showUserPicture.value = true;
 }
 </script>
 
