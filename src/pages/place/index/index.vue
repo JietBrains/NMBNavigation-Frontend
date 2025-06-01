@@ -102,7 +102,7 @@ import message from 'src/assets/icons/聊天.png'
 import navigationIcon from 'src/assets/icons/导航.png'
 import { Message, Left, Right, Search2, MoreX, Find } from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
-import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment, searchPhotos } from 'src/utils/api.ts'
+import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment, searchPhotos, checkLogin } from 'src/utils/api.ts'
 import Tabbar from '../../../components/Tabbar.vue'
 import { Uploader } from '@nutui/nutui-taro';
 
@@ -248,8 +248,19 @@ const cancel = () => {
 }
 
 onMounted(() => {
-  hasLogin.value = Taro.getStorageSync('token') ? true : false
-  formData.value.name = Taro.getStorageSync('username') || '游客'
+  checkLogin().then((res) => {
+    console.log('checkLogin:', res)
+    if (res.code === 200) {
+      hasLogin.value = true
+      console.log('已登录，用户信息:', res.data)
+    } else {
+      hasLogin.value = false
+      console.log('未登录或登录状态已过期')
+    }
+  }).catch(err => {
+    console.error('检查登录状态失败:', err)
+    hasLogin.value = false
+  })
   const instance = Taro.getCurrentInstance()
   const params = (instance && instance.router && instance.router.params) || {};
   end.value = params.name || ''
@@ -345,7 +356,6 @@ const confirm = () => {
 }
 
 const onClickComment = () => {
-  hasLogin.value = Taro.getStorageSync('token') ? true : false
   if (!hasLogin.value) {
     Taro.showToast({
       title: '请先登录',
@@ -384,7 +394,6 @@ const closePopup = () => {
 }
 
 const onCollect = () => {
-  hasLogin.value = Taro.getStorageSync('token') ? true : false
   if (!hasLogin.value) {
     Taro.showToast({
       title: '请先登录',

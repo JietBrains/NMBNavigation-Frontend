@@ -32,7 +32,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import Taro from '@tarojs/taro'
 import Tabbar from 'src/components/Tabbar.vue'
-import { login } from 'src/utils/api'
+import { login, checkLogin } from 'src/utils/api'
 
 interface SimpleUserInfo {
   avatarUrl: string
@@ -96,7 +96,20 @@ interface LoginResponse {
 
 onMounted(() => {
   // 检查是否已登录
-  const token = Taro.getStorageSync('token')
+  var token = null
+  checkLogin().then(res => {
+    if (res.code === 200) {
+      hasLogin.value = true
+      console.log('已登录，用户信息:', userInfo)
+      token = Taro.getStorageSync('token')
+    } else {
+      hasLogin.value = false
+      console.log('未登录或登录状态已过期')
+    }
+  }).catch(err => {
+    console.error('检查登录状态失败:', err)
+    hasLogin.value = false
+  })
   if (token) {
     hasLogin.value = true
     console.log('已登录，token:', token)

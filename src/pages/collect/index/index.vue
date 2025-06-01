@@ -27,7 +27,7 @@ import {ref, computed, onMounted} from 'vue'
 import Taro from '@tarojs/taro'
 import collectIcon from 'src/assets/icons/收藏 (已收藏).png'
 import change from 'src/assets/icons/设置.png'
-import {getAllCollection, topCollection, deleteCollection} from 'src/utils/api.ts'
+import {getAllCollection, topCollection, deleteCollection, checkLogin} from 'src/utils/api.ts'
 import Tabbar from '../../../components/Tabbar.vue'
 
 // 收藏数据
@@ -112,7 +112,14 @@ const onChange = (item) => {
 }
 
 onMounted(() => {
-  hasLogin.value = Taro.getStorageSync('token') ? true : false
+  checkLogin().then(res => {
+    console.log('checkLogin', res)
+    if (res.code === 200) {
+      hasLogin.value = true
+    } else {
+      hasLogin.value = false
+    }
+  })
   if (!hasLogin.value) {
     Taro.showToast({
       title: '获取收藏数据失败，请先登录',

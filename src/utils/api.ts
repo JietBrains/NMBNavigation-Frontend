@@ -84,6 +84,10 @@ const login = (data: any) => {
     return post('/user/login', data)
 }
 
+const checkLogin = () => {
+    return get('/user/checkLogin')
+}
+
 export {
     viewAllPhotoOnMainPage,
     searchPhotos,
@@ -100,5 +104,6 @@ export {
     saveSearchHistory,
     loadSearchHistory,
     clearSearchHistory,
-    login
+    login,
+    checkLogin
 }
