@@ -135,12 +135,22 @@ const getUserProfile = () => {
       try {
         let loginRes = await Taro.login()
         console.log('微信登录成功:', loginRes)
-        
-        const res2 = await login({
+      } catch (error) {
+        console.error('登录失败:', error)
+      }
+
+      Object.assign(userInfo, res.userInfo)
+      Taro.setStorageSync('userInfo', userInfo)
+      console.log('userInfo:', userInfo)
+      console.log('username:', username.value)
+      console.log('password:', password.value)
+      console.log("userInfo\.nickName:", userInfo.nickName)
+      console.log('userInfo\.avatarUrl:', userInfo.avatarUrl)
+      const res2 = await login({
           'username': username.value,
           'password': password.value,
-          'nickname': userProfile.userInfo.nickName,
-          'avatarurl': userProfile.userInfo.avatarUrl
+          'nickname': userInfo.nickName,
+          'avatarurl': userInfo.avatarUrl
         }) as LoginResponse
 
         console.log('res:', res2)
@@ -158,13 +168,6 @@ const getUserProfile = () => {
             duration: 2000
           })
         }
-      } catch (error) {
-        console.error('登录失败:', error)
-      }
-
-      Object.assign(userInfo, res.userInfo)
-      Taro.setStorageSync('userInfo', userInfo)
-      console.log('userInfo:', userInfo)
       hasLogin.value = true
       // 显示登录成功提示
       Taro.showToast({
