@@ -149,10 +149,15 @@
         height: 80rpx;
         border-radius: 50%;
         margin-right: 20rpx;
+        flex-shrink: 0;
+        /* 防止头像被压缩 */
       }
 
       .comment-content {
         flex: 1;
+        min-width: 0;
+        /* 确保内容可以收缩 */
+
         .comment-header {
           display: flex;
           justify-content: space-between;
@@ -175,10 +180,18 @@
           color: #333;
           line-height: 1.5;
           margin-bottom: 10rpx;
+          word-break: break-all;
+          /* 允许在任意字符处换行 */
+          overflow-wrap: break-word;
+          /* 允许长单词或URL换行 */
         }
 
         .image-list {
           white-space: nowrap;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          /* 平滑滚动 */
+
           .comment-image {
             width: 150rpx;
             height: 150rpx;
