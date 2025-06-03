@@ -27,7 +27,7 @@
       </view>
 
       <view class="comment-section">
-        <view class="section-title">用户评论（{{ comments.length }}）</view>
+        <view class="section-title">{{end  }} 用户评论（{{ comments.length }}）</view>
         <view class="comment-list">
           <view class="comment-item" v-for="(item, index) in comments" :key="index">
             <image class="avatar" :src="item.avatar" mode="aspectFill" />

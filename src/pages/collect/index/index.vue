@@ -116,32 +116,30 @@ onMounted(() => {
     console.log('checkLogin', res)
     if (res.code === 200) {
       hasLogin.value = true
+      
+      // 登录检查成功后再获取收藏数据
+      getAllCollection().then(res => {
+        console.log('getAllCollection', res)
+        if (res.code === 200) {
+          res.data.collects.forEach((item, index) => {
+            const id = index + 1;
+            const building = item[0] + '座';
+            const floor = item[1] + '层';
+            const name = item;
+            allItems.value.push({id, floor, building, name});
+          })
+          console.log('allItems', allItems.value)
+        } else {
+          Taro.showToast({
+            title: '获取收藏数据失败',
+            icon: 'none'
+          })
+        }
+      })
     } else {
       hasLogin.value = false
-    }
-  })
-  if (!hasLogin.value) {
-    Taro.showToast({
-      title: '获取收藏数据失败，请先登录',
-      icon: 'none'
-    })
-    return
-  }
-  // 获取收藏数据
-  getAllCollection().then(res => {
-    console.log('getAllCollection', res)
-    if (res.code === 200) {
-      res.data.collects.forEach((item, index) => {
-        const id = index + 1;
-        const building = item[0] + '座';
-        const floor = item[1] + '层';
-        const name = item;
-        allItems.value.push({id, floor, building, name});
-      })
-      console.log('allItems', allItems.value)
-    } else {
       Taro.showToast({
-        title: '获取收藏数据失败',
+        title: '获取收藏数据失败，请先登录',
         icon: 'none'
       })
     }
