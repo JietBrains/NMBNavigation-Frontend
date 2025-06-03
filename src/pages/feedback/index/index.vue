@@ -90,9 +90,14 @@ const submit = () => {
         title: '反馈提交成功',
         icon: 'success'
       });
+      // 清空表单
+      description.value = '';
+      phone.value = '';
+      email.value = '';
+      imageList.value = [];
     } else {
       Taro.showToast({
-        title: '提交失败，请稍后再试',
+        title: '提交失败，请先登录',
         icon: 'none'
       });
     }
