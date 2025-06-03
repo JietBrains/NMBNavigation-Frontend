@@ -38,7 +38,8 @@
               </view>
               <text class="comment-text">{{ item.description }}</text>
               <view class="image-list" v-if="item.images.length">
-                <image v-if="item.images" :src="item.images" class="comment-image" mode="aspectFill" @tap="toShowPicture(item)"/>
+                <image v-if="item.images" :src="item.images" class="comment-image" mode="aspectFill"
+                  @tap="toShowPicture(item)" />
               </view>
             </view>
           </view>
@@ -120,7 +121,7 @@ const showPreview = ref(false)
 const showUserPicture = ref(false)
 const currentIndex = ref(0)
 const isCollect = ref(false)
-const hasLogin = ref(true)
+const hasLogin = ref(false)
 const comments = ref([]);
 const fixedNavvisible = ref(false)
 const navList = ref([])
@@ -256,6 +257,7 @@ onMounted(() => {
     } else {
       hasLogin.value = false
       console.log('未登录或登录状态已过期')
+      console.log(hasLogin.value)
     }
   }).catch(err => {
     console.error('检查登录状态失败:', err)
@@ -265,7 +267,7 @@ onMounted(() => {
   const params = (instance && instance.router && instance.router.params) || {};
   end.value = params.name || ''
   console.log('收到参数 end:', end.value)
-
+  console.log('hasLogin:', hasLogin.value)
   searchPhotos({
     name: end.value,
   }).then((res) => {
@@ -284,12 +286,14 @@ onMounted(() => {
     imgList.value = [photo]
     swiperList.value = imgList.value.map(url => ({ src: url }))
   })
-
+  console.log(hasLogin.value)
   if (!hasLogin.value) {
+    console.log("here!!!")
     navList.value = navListWithoutCollect.value
     isCollect.value = false
     comments.value = []
   } else {
+    console.log("here!!!!!!")
     collectJudgement({
       name: end.value,
     }).then((res) => {
