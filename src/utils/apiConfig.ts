@@ -7,12 +7,14 @@ function request({
     url,
     method: methodParam = 'GET' as RequestMethod,
     data = {},
-    header = {}
+    header = {},
+    comfirmedUrl = false
 }: {
     url: string;
     method?: RequestMethod;
     data?: Record<string, any>;
     header?: Record<string, string>;
+    comfirmedUrl?:boolean
 }) {
     return new Promise((resolve, reject) => {
         const baseConfig = {
@@ -24,7 +26,7 @@ function request({
             }
         };
         Taro.request({
-            url: baseConfig.baseUrl + url,
+            url: comfirmedUrl? url: baseConfig.baseUrl + url,
             method: methodParam,
             data,
             header: {
@@ -130,6 +132,23 @@ function queryDel(url: string, data?: Record<string, any>, header?: Record<strin
     });
 }
 
+function comfirmedGet(url: string, data?: Record<string, any>, header?: Record<string, string>) {
+    if (data) {
+        const queryString = objectToQueryString(data);
+        url = url = `${url}?${queryString}`;
+    }
+    const comfirmedUrl = true
+    console.log("url: ", url)
+    return request({
+        url,
+        method: 'GET',
+        data: {}, // 由于参数已经在 URL 里，这里的 data 置为空
+        header,
+        comfirmedUrl
+    });
+
+}
+
 // 导出请求函数
 export {
     get,
@@ -138,4 +157,5 @@ export {
     del,
     queryPost,
     queryDel,
+    comfirmedGet
 };

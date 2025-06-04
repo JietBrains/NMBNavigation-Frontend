@@ -1,4 +1,4 @@
-import {get, post, del, queryPost, queryDel} from './apiConfig'
+import {get, post, del, queryPost, queryDel, comfirmedGet} from './apiConfig'
 
 // 首页查看各地点图片
 const viewAllPhotoOnMainPage = (data: any) => {
@@ -88,6 +88,14 @@ const checkLogin = () => {
     return get('/user/checkLogin')
 }
 
+const getOpenId = (data: any) => {
+    return comfirmedGet("https://api.weixin.qq.com/sns/jscode2session", data)
+}
+
+const getUserInfo = () => {
+    return get('/user/getInfo', {})
+}
+
 export {
     viewAllPhotoOnMainPage,
     searchPhotos,
@@ -105,5 +113,7 @@ export {
     loadSearchHistory,
     clearSearchHistory,
     login,
-    checkLogin
+    checkLogin,
+    getOpenId,
+    getUserInfo
 }

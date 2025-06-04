@@ -3,12 +3,11 @@
     <!-- 用户信息卡片 -->
     <nut-cell-group class="user-card">
       <view class="user-info">
-        <image class="avatar" :src="hasLogin ? userInfo.avatarUrl : defaultAvatar" mode="aspectFill"
-          :class="{ 'avatar-animate': hasLogin }" />
+        <image class="avatar" :src="userInfo.avatarUrl" mode="aspectFill" :class="{ 'avatar-animate': hasLogin }" />
         <view class="user-detail">
-          <text v-if="hasLogin" class="nickname">{{ userInfo.nickName }}</text>
-          <nut-button v-else type="primary" size="small" @tap="getUserProfile" class="login-btn">
-            点击登录
+          <text class="nickname">{{ userInfo.nickName }}</text>
+          <nut-button type="primary" size="small" @tap='showPopup = true' class="login-btn">
+            更新用户头像昵称
           </nut-button>
         </view>
       </view>
@@ -26,13 +25,23 @@
 
     <Tabbar :count="3"></Tabbar>
   </view>
+  <nut-popup v-model:visible="showPopup" position="bottom" class="login-popup" @close="closePopup">
+    <view class="popup-title">填写头像昵称信息</view>
+    <button open-type="chooseAvatar" class="avatar-wrapper" @chooseavatar="onChooseAvatar">
+      <image class="avatar1" :src="avatarUrl"></image>
+    </button>
+    <nut-cell>
+      <input v-model="nickname" type="nickname" class="weui-input" placeholder="请输入昵称" />
+    </nut-cell>
+    <nut-button type='primary' size='large' class="confirm-btn" @tap="updateUserInfo"> 确定 </nut-button>
+  </nut-popup>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
 import Taro from '@tarojs/taro'
 import Tabbar from 'src/components/Tabbar.vue'
-import { login, checkLogin } from 'src/utils/api'
+import { getUserInfo } from 'src/utils/api'
 
 interface SimpleUserInfo {
   avatarUrl: string
@@ -45,151 +54,90 @@ const userInfo = reactive<SimpleUserInfo>({
 })
 
 const hasLogin = ref(false)
-const defaultAvatar = 'https://cdn.jsdelivr.net/gh/hjzts/imgs/img202505010233338.png'
+const showPopup = ref(false)
+const avatarUrl = ref('')
+const nickname = ref('')
 
-interface UserInfo {
-  avatarUrl: string
-  city: string
-  country: string
-  gender: number
-  language: string
-  nickName: string
-  province: string
-}
-
-interface UserProfile {
-  cloudID: string
-  encryptedData: string
-  errMsg: string
-  iv: string
-  rawData: string
-  signature: string
-  userInfo: UserInfo
-}
-
-const userProfile = reactive<UserProfile>({
-  cloudID: '',
-  encryptedData: '',
-  errMsg: '',
-  iv: '',
-  rawData: '',
-  signature: '',
-  userInfo: {
-    avatarUrl: '',
-    city: '',
-    country: '',
-    gender: 0,
-    language: '',
-    nickName: '',
-    province: ''
-  }
-})
-const username = ref('')
-const password = ref('')
-
-interface LoginResponse {
-  code: number
-  data: {
-    token: string
-  }
-}
-
-onMounted(() => {
-  // 检查是否已登录
-  var token = null
-  checkLogin().then(res => {
-    if (res.code === 200) {
+onMounted(async () => {
+  let tempNickname = Taro.getStorageSync('nickName')
+  let tempAvatar = Taro.getStorageSync('avatar')
+  if (!tempNickname || !tempAvatar) {
+    getInfoRes = await getUserInfo()
+    if (getInfoRes.code === 200) {
+      userInfo.avatarUrl = getInfoRes.data.avatarUrl
+      userInfo.nickName = getInfoRes.data.nickName
+      avatarUrl.value = userInfo.avatarUrl
+      nickname.value = userInfo.nickName
+      Taro.setStorageSync('nickName', userInfo.nickName)
+      Taro.setStorageSync('avatar', userInfo.avatarUrl)
+      console.log('获取用户信息成功:', userInfo)
       hasLogin.value = true
-      console.log('已登录，用户信息:', userInfo)
-      token = Taro.getStorageSync('token')
     } else {
-      hasLogin.value = false
-      console.log('未登录或登录状态已过期')
+      console.error('获取用户信息失败:', getInfoRes)
     }
-  }).catch(err => {
-    console.error('检查登录状态失败:', err)
-    hasLogin.value = false
-  })
-  if (token) {
-    hasLogin.value = true
-    console.log('已登录，token:', token)
-  } else {
-    hasLogin.value = false
-    console.log('未登录')
-  }
-  // 获取用户信息
-  const userInfoFromStorage = Taro.getStorageSync('userInfo')
-  if (userInfoFromStorage) {
-    userInfo.avatarUrl = userInfoFromStorage.avatarUrl
-    userInfo.nickName = userInfoFromStorage.nickName
-  } else {
-    userInfo.avatarUrl = defaultAvatar
-    userInfo.nickName = '点击登录'
   }
 })
 
-const getUserProfile = () => {
-  Taro.getUserProfile({
-    desc: '用于完善会员信息',
-    success: async (res) => {
-      try {
-        let loginRes = await Taro.login()
-        console.log('微信登录成功:', loginRes)
-      } catch (error) {
-        console.error('登录失败:', error)
-      }
+const onChooseAvatar = (e: any) => {
+  console.log('选择头像:', e)
+  if (e.detail.avatarUrl) {
+    avatarUrl.value = e.detail.avatarUrl
+  }
+}
 
-      Object.assign(userInfo, res.userInfo)
-      Taro.setStorageSync('userInfo', userInfo)
-      console.log('userInfo:', userInfo)
-      console.log('username:', username.value)
-      console.log('password:', password.value)
-      console.log("userInfo\.nickName:", userInfo.nickName)
-      console.log('userInfo\.avatarUrl:', userInfo.avatarUrl)
-      const res2 = await login({
-          'username': username.value,
-          'password': password.value,
-          'nickname': userInfo.nickName,
-          'avatarurl': userInfo.avatarUrl
-        }) as LoginResponse
-
-        console.log('res:', res2)
-        if (res2.code === 200) {
-          Taro.setStorageSync('token', res2.data.token)
-          Taro.showToast({
-            title: '登录成功',
-            icon: 'success',
-            duration: 2000
-          })
-        } else {
-          Taro.showToast({
-            title: '登录失败',
-            icon: 'none',
-            duration: 2000
-          })
-        }
-      hasLogin.value = true
-      // 显示登录成功提示
-      Taro.showToast({
-        title: '登录成功',
-        icon: 'success',
-        duration: 2000
-      })
-    },
-    fail: () => {
-      Taro.showToast({
-        title: '登录失败',
-        icon: 'error',
-        duration: 2000
-      })
-    }
-  })
+const closePopup = () => {
+  console.log('关闭弹窗')
+  console.log('选择的头像:', avatarUrl.value)
+  console.log('输入的昵称:', nickname.value)
+  showPopup.value = false
 }
 
 const goTo = (url: string) => {
   console.log(url)
   Taro.navigateTo({ url: url })
   // Taro.reLaunch({ url: url })
+}
+
+const updateUserInfo = () => {
+  if (avatarUrl.value === userInfo.avatarUrl && nickname.value === userInfo.nickName) {
+    Taro.showToast({
+      title: '未作出修改',
+      icon: 'none',
+      duration: 2000
+    })
+    return
+  }
+  Taro.uploadFile({
+    url: 'http://localhost:8080/upload', // 替换为你的上传接口
+    filePath: avatarUrl.value,
+    name: 'file',
+    formData: {
+      nickname: nickname.value,
+    },
+    success: (res) => {
+      console.log('上传成功:', res)
+      Taro.showToast({
+        title: '更新成功',
+        icon: 'success',
+        duration: 2000
+      })
+      userInfo.avatarUrl = avatarUrl.value
+      userInfo.nickName = nickname.value
+      avatarUrl.value = userInfo.avatarUrl
+      nickname.value = userInfo.nickName
+      Taro.setStorageSync('nickName', userInfo.nickName)
+      Taro.setStorageSync('avatar', userInfo.avatarUrl)
+      hasLogin.value = true
+    },
+    fail: (err) => {
+      console.error('上传失败:', err)
+      Taro.showToast({
+        title: '更新失败',
+        icon: 'none',
+        duration: 2000
+      })
+    }
+  })
 }
 </script>
 
@@ -311,5 +259,67 @@ const goTo = (url: string) => {
 
 :deep(.nut-cell__value) {
   color: #999 !important;
+}
+
+.login-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px; // 增加整个弹出层的内边距
+
+  .popup-title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px; // 与头像之间的间距
+  }
+
+  .avatar-wrapper {
+    padding: 0;
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  // 头像样式调整
+  .avatar1 {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto; // 头像居中
+    display: block;
+  }
+
+  .input-container {
+    padding: 10px 0; // 垂直间距
+
+    :deep(.nut-cell) {
+      padding: 0; // 移除cell默认内边距
+    }
+  }
+
+  .custom-input {
+    width: 100%;
+    padding: 20px 15px;
+    font-size: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    box-sizing: border-box;
+  }
+
+  .btn-container {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 20px;
+
+    .confirm-btn {
+      width: 80%;
+      height: 48px;
+      font-size: 16px;
+      border-radius: 24px;
+      background: #07c160;
+      border: none;
+    }
+  }
 }
 </style>
