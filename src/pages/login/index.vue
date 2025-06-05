@@ -3,7 +3,7 @@
     <!-- 用户信息卡片 -->
     <nut-cell-group class="user-card">
       <view class="user-info">
-        <image class="avatar" :src="userInfo.avatarUrl" mode="aspectFill" :class="{ 'avatar-animate': hasLogin }" />
+        <image class="avatar" :src="userInfo.avatarUrl" mode="aspectFill" :class="{ 'avatar-animate': false }" />
         <view class="user-detail">
           <text class="nickname">{{ userInfo.nickName }}</text>
           <nut-button type="primary" size="small" @tap='showPopup = true' class="login-btn">
@@ -53,7 +53,6 @@ const userInfo = reactive<SimpleUserInfo>({
   nickName: '',
 })
 
-const hasLogin = ref(false)
 const showPopup = ref(false)
 const avatarUrl = ref('')
 const nickname = ref('')
@@ -61,6 +60,8 @@ const nickname = ref('')
 onMounted(async () => {
   let tempNickname = Taro.getStorageSync('nickName')
   let tempAvatar = Taro.getStorageSync('avatar')
+  console.log('临时昵称:', tempNickname)
+  console.log('临时头像:', tempAvatar)
   if (!tempNickname || !tempAvatar) {
     getInfoRes = await getUserInfo()
     if (getInfoRes.code === 200) {
@@ -71,10 +72,15 @@ onMounted(async () => {
       Taro.setStorageSync('nickName', userInfo.nickName)
       Taro.setStorageSync('avatar', userInfo.avatarUrl)
       console.log('获取用户信息成功:', userInfo)
-      hasLogin.value = true
     } else {
       console.error('获取用户信息失败:', getInfoRes)
     }
+  } else {
+    userInfo.avatarUrl = tempAvatar
+    userInfo.nickName = tempNickname
+    avatarUrl.value = userInfo.avatarUrl
+    nickname.value = userInfo.nickName
+    console.log('从缓存获取用户信息:', userInfo)
   }
 })
 
@@ -107,6 +113,7 @@ const updateUserInfo = () => {
     })
     return
   }
+  showPopup.value = false
   Taro.uploadFile({
     url: 'http://localhost:8080/upload', // 替换为你的上传接口
     filePath: avatarUrl.value,
@@ -121,13 +128,13 @@ const updateUserInfo = () => {
         icon: 'success',
         duration: 2000
       })
+      // TODO: 处理上传成功后的逻辑
       userInfo.avatarUrl = avatarUrl.value
       userInfo.nickName = nickname.value
       avatarUrl.value = userInfo.avatarUrl
       nickname.value = userInfo.nickName
       Taro.setStorageSync('nickName', userInfo.nickName)
       Taro.setStorageSync('avatar', userInfo.avatarUrl)
-      hasLogin.value = true
     },
     fail: (err) => {
       console.error('上传失败:', err)
