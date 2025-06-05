@@ -121,6 +121,10 @@ const updateUserInfo = () => {
     formData: {
       nickname: nickname.value,
     },
+    header: {
+      'Content-Type': 'multipart/form-data',
+      'token': Taro.getStorageSync('token') || ''
+    },
     success: (res) => {
       console.log('上传成功:', res)
       Taro.showToast({
