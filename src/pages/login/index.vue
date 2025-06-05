@@ -123,7 +123,7 @@ const updateUserInfo = () => {
     },
     header: {
       'Content-Type': 'multipart/form-data',
-      'Authorization': Taro.getStorageSync('token') || ''
+      'Authorization': Taro.getStorageSync('token') || 'unknown',
     },
     success: (res) => {
       console.log('上传成功:', res)
