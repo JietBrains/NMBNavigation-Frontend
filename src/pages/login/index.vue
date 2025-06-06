@@ -31,8 +31,7 @@
       <image class="avatar1" :src="avatarUrl"></image>
     </button>
     <nut-cell>
-      <input v-model="nickname" type="nickname" class="weui-input" placeholder="请输入昵称" :maxlength="10" />
-      <span class="char-count">{{ nickname.length || 0 }}/{{ 10 }}</span>
+      <input v-model="nickname" type="nickname" class="weui-input" placeholder="请输入昵称"/>
     </nut-cell>
     <nut-button type='primary' size='large' class="confirm-btn" @tap="updateUserInfo"> 确定 </nut-button>
   </nut-popup>
@@ -101,13 +100,8 @@ const closePopup = () => {
   showPopup.value = false
 }
 
-const goTo = (url: string) => {
-  console.log(url)
-  Taro.navigateTo({ url: url })
-  // Taro.reLaunch({ url: url })
-}
-
 const updateUserInfo = () => {
+  console.log('nickname.length:', nickname.value.length)
   if (avatarUrl.value === userInfo.avatarUrl && nickname.value === userInfo.nickName) {
     Taro.showToast({
       title: '未作出修改',
@@ -115,7 +109,15 @@ const updateUserInfo = () => {
       duration: 2000
     })
     return
-  } else if (avatarUrl.value === userInfo.avatarUrl) { // 对应未修改头像的情况
+  } else if (nickname.value.length < 2 || nickname.value.length > 15) {
+    Taro.showToast({
+      title: '昵称长度应在2-15个字符之间',
+      icon: 'none',
+      duration: 2000
+    })
+    return
+  }
+  else if (avatarUrl.value === userInfo.avatarUrl) { // 对应未修改头像的情况
     updateInfo({ nickName: nickname.value }).then((res) => {
       if (res.code === 200) {
         Taro.showToast({
@@ -375,10 +377,12 @@ const updateUserInfo = () => {
     }
   }
 }
-.char-count {
-  position: absolute;
-  right: 20px;
-  bottom: 10px;
-  color: #999;
+
+.weui-input {
+  flex: 1;
+  font-size: 30px;
+  padding: 8px;
+  border: none;
+  background: transparent;
 }
 </style>
