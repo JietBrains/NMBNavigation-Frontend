@@ -96,6 +96,10 @@ const getUserInfo = () => {
     return get('/user/getInfo', {})
 }
 
+const updateInfo = (data: any) => {
+    return queryPost('/user/updateInfo', data)
+}
+
 export {
     viewAllPhotoOnMainPage,
     searchPhotos,
@@ -115,5 +119,6 @@ export {
     login,
     checkLogin,
     getOpenId,
-    getUserInfo
+    getUserInfo,
+    updateInfo
 }

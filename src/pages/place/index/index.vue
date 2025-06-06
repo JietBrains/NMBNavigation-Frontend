@@ -312,7 +312,6 @@ onMounted(() => {
       isCollect.value = false
     })
   }
-
   getComment({
     name: end.value,
   }).then((res) => {

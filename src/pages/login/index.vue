@@ -41,7 +41,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import Taro from '@tarojs/taro'
 import Tabbar from 'src/components/Tabbar.vue'
-import { getUserInfo } from 'src/utils/api'
+import { getUserInfo, updateInfo } from 'src/utils/api'
 
 interface SimpleUserInfo {
   avatarUrl: string
@@ -63,10 +63,10 @@ onMounted(async () => {
   console.log('临时昵称:', tempNickname)
   console.log('临时头像:', tempAvatar)
   if (!tempNickname || !tempAvatar) {
-    getInfoRes = await getUserInfo()
+    let getInfoRes = await getUserInfo()
     if (getInfoRes.code === 200) {
-      userInfo.avatarUrl = getInfoRes.data.avatarUrl
-      userInfo.nickName = getInfoRes.data.nickName
+      userInfo.avatarUrl = getInfoRes.data.avatar
+      userInfo.nickName = getInfoRes.data.nickname
       avatarUrl.value = userInfo.avatarUrl
       nickname.value = userInfo.nickName
       Taro.setStorageSync('nickName', userInfo.nickName)
@@ -112,43 +112,73 @@ const updateUserInfo = () => {
       duration: 2000
     })
     return
-  }
-  showPopup.value = false
-  Taro.uploadFile({
-    url: 'http://localhost:8080/upload', // 替换为你的上传接口
-    filePath: avatarUrl.value,
-    name: 'file',
-    formData: {
-      nickname: nickname.value,
-    },
-    header: {
-      'Content-Type': 'multipart/form-data',
-      'Authorization': Taro.getStorageSync('token') || 'unknown',
-    },
-    success: (res) => {
-      console.log('上传成功:', res)
-      Taro.showToast({
-        title: '更新成功',
-        icon: 'success',
-        duration: 2000
-      })
-      // TODO: 处理上传成功后的逻辑
-      userInfo.avatarUrl = avatarUrl.value
-      userInfo.nickName = nickname.value
-      avatarUrl.value = userInfo.avatarUrl
-      nickname.value = userInfo.nickName
-      Taro.setStorageSync('nickName', userInfo.nickName)
-      Taro.setStorageSync('avatar', userInfo.avatarUrl)
-    },
-    fail: (err) => {
-      console.error('上传失败:', err)
+  } else if (avatarUrl.value === userInfo.avatarUrl) { // 对应未修改头像的情况
+    showPopup.value = false
+    updateInfo({ nickName: nickname.value }).then((res) => {
+      if (res.code === 200) {
+        Taro.showToast({
+          title: '更新成功',
+          icon: 'success',
+          duration: 2000
+        })
+        userInfo.nickName = nickname.value
+        nickname.value = userInfo.nickName
+        Taro.setStorageSync('nickName', userInfo.nickName)
+      } else {
+        Taro.showToast({
+          title: '更新失败',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    }).catch((err) => {
+      console.error('更新失败:', err)
       Taro.showToast({
         title: '更新失败',
         icon: 'none',
         duration: 2000
       })
+    })
+  } else {
+    showPopup.value = false
+    Taro.uploadFile({
+      url: 'https://backend.jietbrains.top/user/updateInfo?nickName=' + nickname.value, // 替换为你的上传接口
+      filePath: avatarUrl.value,
+      name: 'file',
+      header: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': Taro.getStorageSync('token') || 'unknown',
+      },
+      success: (res) => {
+        console.log('上传成功:', res)
+        Taro.showToast({
+          title: '更新成功',
+          icon: 'success',
+          duration: 2000
+        })
+        // TODO: 处理上传成功后的逻辑
+        console.log('上传结果:', res.data)
+        if (typeof res.data === 'string') {
+          res.data = JSON.parse(res.data)
+        }
+        userInfo.avatarUrl = res.data.data.avatar
+        userInfo.nickName = nickname.value
+        avatarUrl.value = userInfo.avatarUrl
+        nickname.value = userInfo.nickName
+        Taro.setStorageSync('nickName', userInfo.nickName)
+        Taro.setStorageSync('avatar', userInfo.avatarUrl)
+      },
+      fail: (err) => {
+        console.error('上传失败:', err)
+        Taro.showToast({
+          title: '更新失败',
+          icon: 'none',
+          duration: 2000
+        })
+      }
     }
-  })
+    )
+  }
 }
 </script>
 
