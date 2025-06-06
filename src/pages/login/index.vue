@@ -19,7 +19,7 @@
         <nut-cell title="🧭 首页" is-link @click="Taro.reLaunch({url: '/pages/map/index/index'})" class="nav-item" />
         <nut-cell title="⭐ 收藏页面" is-link @click="Taro.reLaunch({url: '/pages/collect/index/index'})" class="nav-item" />
         <nut-cell title="🔍 搜索页面" is-link @click="Taro.reLaunch({url: '/pages/history/index/index'})" class="nav-item" />
-        <nut-cell title="📝 反馈页面" is-link @click="Taro.reLaunch({url: '/pages/feedback/index/index'})" class="nav-item" />
+        <nut-cell title="📝 反馈页面" is-link @click="Taro.navigateTo({url: '/pages/feedback/index/index'})" class="nav-item" />
       </nut-cell-group>
     </view>
 
