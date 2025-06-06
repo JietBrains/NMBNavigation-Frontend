@@ -71,6 +71,7 @@ const toggleImageSelection = (imageType) => {
 
 const cancel = () => {
   showInput.value = false
+  cascaderValue.value = []
   cascaderVisible.value = false
 }
 
@@ -85,6 +86,14 @@ const status = computed(() =>{
   }
 )
 const confirm = () => {
+  if (cascaderValue.value.length === 0) {
+    Taro.showToast({
+      title: '请选择您的当前位置',
+      icon: 'none',
+      duration: 2000
+    })
+    return
+  }
   showInput.value = false
   cascaderVisible.value = false
   console.log('当前地址:', cascaderValue.value)

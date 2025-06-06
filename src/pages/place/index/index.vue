@@ -241,6 +241,8 @@ const onSearch = () => {
 
 const cancel = () => {
   showInput.value = false
+  cascaderValue.value = []
+  cascaderVisible.value = false
 }
 
 onMounted(async () => {
@@ -346,8 +348,25 @@ onMounted(async () => {
 })
 
 const confirm = () => {
+  if (cascaderValue.value.length === 0) {
+    Taro.showToast({
+      title: '请选择您的当前位置',
+      icon: 'none',
+      duration: 2000
+    })
+    return
+  }
+  if (cascaderValue.value[2] === end.value) {
+    Taro.showToast({
+      title: '当前位置与目的地相同',
+      icon: 'none',
+      duration: 2000
+    })
+    return
+  }
   showInput.value = false
   console.log('选择的地址:', cascaderValue.value[2])
+  console.log('end:', end.value)
   Taro.navigateTo({
     url: `/pages/navigation/index/index?start=${cascaderValue.value[2]}&end=${end.value}`,
   })
