@@ -2,11 +2,6 @@
   <nut-image-preview :show="showPreview" :images="swiperList" :init-no="currentIndex" @close="hideFn" />
   <nut-image-preview :show="showUserPicture" :images="showedPicture" @close="showUserPicture = false" />
   <view class="container">
-    <nut-searchbar disabled="true" @click="onSearch">
-      <template #rightin>
-        <Search2 />
-      </template>
-    </nut-searchbar>
 
     <scroll-view scroll-y="true" class="scroll-area">
       <view class="swiper-demo">
@@ -248,8 +243,8 @@ const cancel = () => {
   showInput.value = false
 }
 
-onMounted(() => {
-  checkLogin().then((res) => {
+onMounted(async () => {
+  await checkLogin().then((res) => {
     console.log('checkLogin:', res)
     if (res.code === 200) {
       hasLogin.value = true

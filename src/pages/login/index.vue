@@ -16,10 +16,10 @@
     <!-- 导航按钮组 -->
     <view class="nav-section">
       <nut-cell-group>
-        <nut-cell title="🧭 首页" is-link @click="goTo('/pages/map/index/index')" class="nav-item" />
-        <nut-cell title="⭐ 收藏页面" is-link @click="goTo('/pages/collect/index/index')" class="nav-item" />
-        <nut-cell title="🔍 搜索页面" is-link @click="goTo('/pages/history/index/index')" class="nav-item" />
-        <nut-cell title="📝 反馈页面" is-link @click="goTo('/pages/feedback/index/index')" class="nav-item" />
+        <nut-cell title="🧭 首页" is-link @click="Taro.reLaunch({url: '/pages/map/index/index'})" class="nav-item" />
+        <nut-cell title="⭐ 收藏页面" is-link @click="Taro.reLaunch({url: '/pages/collect/index/index'})" class="nav-item" />
+        <nut-cell title="🔍 搜索页面" is-link @click="Taro.reLaunch({url: '/pages/history/index/index'})" class="nav-item" />
+        <nut-cell title="📝 反馈页面" is-link @click="Taro.reLaunch({url: '/pages/feedback/index/index'})" class="nav-item" />
       </nut-cell-group>
     </view>
 
@@ -116,7 +116,6 @@ const updateUserInfo = () => {
     })
     return
   } else if (avatarUrl.value === userInfo.avatarUrl) { // 对应未修改头像的情况
-    showPopup.value = false
     updateInfo({ nickName: nickname.value }).then((res) => {
       if (res.code === 200) {
         Taro.showToast({
@@ -127,6 +126,7 @@ const updateUserInfo = () => {
         userInfo.nickName = nickname.value
         nickname.value = userInfo.nickName
         Taro.setStorageSync('nickName', userInfo.nickName)
+        showPopup.value = false
       } else {
         Taro.showToast({
           title: '更新失败',
@@ -143,7 +143,6 @@ const updateUserInfo = () => {
       })
     })
   } else {
-    showPopup.value = false
     Taro.uploadFile({
       url: 'https://backend.jietbrains.top/user/updateInfo?nickName=' + nickname.value, // 替换为你的上传接口
       filePath: avatarUrl.value,
@@ -178,6 +177,7 @@ const updateUserInfo = () => {
           nickname.value = userInfo.nickName
           Taro.setStorageSync('nickName', userInfo.nickName)
           Taro.setStorageSync('avatar', userInfo.avatarUrl)
+          showPopup.value = false
         }
       },
       fail: (err) => {
