@@ -80,8 +80,8 @@ const clearSearchHistory = (data: any) => {
     return del('/search/delete', data)
 }
 
-const login = (data: any) => {
-    return post('/user/login', data)
+const login = (code: string) => {
+    return post('/user/login', {}, {'code': code})
 }
 
 const checkLogin = () => {

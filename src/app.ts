@@ -20,30 +20,28 @@ const tryLogin = async () => {
   let taroLoginRes = await Taro.login()
   const code = taroLoginRes.code
   console.log(taroLoginRes)
-  let openId = ''
+  // try {
+  //   let getOpenIdRes = await getOpenId({
+  //     appid: "wx779e1909e689a563",
+  //     secret: "0c44946ccebda3da66cc9adaa543c852",
+  //     js_code: code,
+  //     grant_type: "authorization_code"
+  //   })
+  //   console.log("获取openId结果", getOpenIdRes)
+  //   openId = getOpenIdRes.openid
+  //   console.log("获取openId成功", openId)
+  //   Taro.setStorageSync('openId', openId)
+  // } catch (error) {
+  //   console.error("获取openId失败", error)
+  // }
   try {
-    let getOpenIdRes = await getOpenId({
-      appid: "wx779e1909e689a563",
-      secret: "0c44946ccebda3da66cc9adaa543c852",
-      js_code: code,
-      grant_type: "authorization_code"
-    })
-    console.log("获取openId结果", getOpenIdRes)
-    openId = getOpenIdRes.openid
-    console.log("获取openId成功", openId)
-    Taro.setStorageSync('openId', openId)
+    let loginRes = await login(code)
+    console.log("登录成功")
+    let token = loginRes.data.token
+    console.log("获取token成功", token)
+    Taro.setStorageSync('token', token)
   } catch (error) {
-    console.error("获取openId失败", error)
-  }
-  if (openId) {
-    try {
-      let loginRes = await login({ "id": openId })
-      console.log("登录成功")
-      let token = loginRes.data.token
-      Taro.setStorageSync('token', token)
-    } catch (error) {
-      console.error("登录失败", error)
-    }
+    console.error("登录失败", error)
   }
 
 }

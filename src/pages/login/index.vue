@@ -31,7 +31,8 @@
       <image class="avatar1" :src="avatarUrl"></image>
     </button>
     <nut-cell>
-      <input v-model="nickname" type="nickname" class="weui-input" placeholder="请输入昵称" />
+      <input v-model="nickname" type="nickname" class="weui-input" placeholder="请输入昵称" :maxlength="10" />
+      <span class="char-count">{{ nickname.length || 0 }}/{{ 10 }}</span>
     </nut-cell>
     <nut-button type='primary' size='large' class="confirm-btn" @tap="updateUserInfo"> 确定 </nut-button>
   </nut-popup>
@@ -95,6 +96,8 @@ const closePopup = () => {
   console.log('关闭弹窗')
   console.log('选择的头像:', avatarUrl.value)
   console.log('输入的昵称:', nickname.value)
+  avatarUrl.value = userInfo.avatarUrl // 重置头像
+  nickname.value = userInfo.nickName // 重置昵称
   showPopup.value = false
 }
 
@@ -151,22 +154,31 @@ const updateUserInfo = () => {
       },
       success: (res) => {
         console.log('上传成功:', res)
-        Taro.showToast({
-          title: '更新成功',
-          icon: 'success',
-          duration: 2000
-        })
         // TODO: 处理上传成功后的逻辑
         console.log('上传结果:', res.data)
         if (typeof res.data === 'string') {
           res.data = JSON.parse(res.data)
         }
-        userInfo.avatarUrl = res.data.data.avatar
-        userInfo.nickName = nickname.value
-        avatarUrl.value = userInfo.avatarUrl
-        nickname.value = userInfo.nickName
-        Taro.setStorageSync('nickName', userInfo.nickName)
-        Taro.setStorageSync('avatar', userInfo.avatarUrl)
+        if (res.data.code !== 200) {
+          Taro.showToast({
+            title: '更新失败',
+            icon: 'none',
+            duration: 2000
+          })
+          return
+        } else {
+          Taro.showToast({
+            title: '更新成功',
+            icon: 'success',
+            duration: 2000
+          })
+          userInfo.avatarUrl = res.data.data.avatar
+          userInfo.nickName = nickname.value
+          avatarUrl.value = userInfo.avatarUrl
+          nickname.value = userInfo.nickName
+          Taro.setStorageSync('nickName', userInfo.nickName)
+          Taro.setStorageSync('avatar', userInfo.avatarUrl)
+        }
       },
       fail: (err) => {
         console.error('上传失败:', err)
@@ -362,5 +374,11 @@ const updateUserInfo = () => {
       border: none;
     }
   }
+}
+.char-count {
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+  color: #999;
 }
 </style>
