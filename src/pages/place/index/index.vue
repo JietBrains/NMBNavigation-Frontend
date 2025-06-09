@@ -98,7 +98,7 @@ import message from 'src/assets/icons/聊天.png'
 import navigationIcon from 'src/assets/icons/导航.png'
 import { Message, Left, Right, Search2, MoreX, Find } from '@nutui/icons-vue-taro'
 import building from 'src/assets/building.json'
-import { collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment, searchPhotos, checkLogin } from 'src/utils/api.ts'
+import { getNavigation, collectJudgement, uploadCollection, deleteCollection, getComment, uploadComment, searchPhotos, checkLogin } from 'src/utils/api.ts'
 import Tabbar from '../../../components/Tabbar.vue'
 import { Uploader } from '@nutui/nutui-taro';
 
@@ -364,11 +364,41 @@ const confirm = () => {
     })
     return
   }
-  showInput.value = false
-  console.log('选择的地址:', cascaderValue.value[2])
-  console.log('end:', end.value)
-  Taro.navigateTo({
-    url: `/pages/navigation/index/index?start=${cascaderValue.value[2]}&end=${end.value}`,
+  getNavigation({
+    param1: cascaderValue.value[2],
+    param2: end.value
+  }).then((res) => {
+    if (res.code === 200) {
+      console.log('获取导航成功:', res.data)
+      // 处理获取到的导航数据
+      if (res.data.length > 0) {
+        showInput.value = false
+        cascaderVisible.value = false
+        console.log('当前地址:', cascaderValue.value)
+        Taro.navigateTo({
+          url: `/pages/navigation/index/index?start=${cascaderValue.value[2]}&end=${end.value}`,
+        })
+      } else {
+        Taro.showToast({
+          title: '您已在目标附近',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    } else {
+      Taro.showToast({
+        title: '获取导航失败',
+        icon: 'none',
+        duration: 2000
+      })
+    }
+  }).catch((err) => {
+    console.error('Error:', err)
+    Taro.showToast({
+      title: '获取导航失败',
+      icon: 'none',
+      duration: 2000
+    })
   })
 }
 

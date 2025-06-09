@@ -4,22 +4,21 @@
     <view class="choose-items-wrapper">
       <view class="choose-item" @tap="showInput = true; selectedImage = 'toilet'">
         <image src="../../../assets/icons/寻找最近/厕所.png" class="choose-image" mode="aspectFit"
-               :class="{ 'selected': selectedImage === 'toilet' }"/>
+          :class="{ 'selected': selectedImage === 'toilet' }" />
         <view class="choose-text">厕所</view>
       </view>
       <view class="choose-item" @tap="showInput = true; selectedImage = 'vendingMachine'">
         <image src="../../../assets/icons/寻找最近/售货机.png" class="choose-image" mode="aspectFit"
-               :class="{ 'selected': selectedImage === 'vendingMachine' }"/>
+          :class="{ 'selected': selectedImage === 'vendingMachine' }" />
         <view class="choose-text">售货机</view>
       </view>
     </view>
   </view>
   <nut-cascader v-model:visible="cascaderVisible" v-model="cascaderValue" title="请选择您的当前位置"
-                :options="options"></nut-cascader>
+    :options="options"></nut-cascader>
   <view v-if="showInput" class="modal-mask">
     <view class="modal-content">
-      <nut-cell title="请选择您的当前地址" :desc="cascaderValue.toString() || '当前地址'"
-                @click="cascaderVisible = true"/>
+      <nut-cell title="请选择您的当前地址" :desc="cascaderValue.toString() || '当前地址'" @click="cascaderVisible = true" />
       <view class="modal-buttons">
         <nut-button @click="cancel">取消</nut-button>
         <nut-button type="primary" @click="confirm">确认</nut-button>
@@ -31,10 +30,11 @@
 
 <script setup>
 import './index.scss'
-import {ref, onMounted, computed} from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import building from 'src/assets/building.json'
 import Taro from "@tarojs/taro";
 import Tabbar from '../../../components/Tabbar.vue'
+import { getNearestNavigation } from 'src/utils/api';
 
 const keyword = ref('')
 const selectedImage = ref('')
@@ -75,15 +75,15 @@ const cancel = () => {
   cascaderVisible.value = false
 }
 
-const status = computed(() =>{
-     if(selectedImage.value === 'toilet'){
-       return 0
-     }else if(selectedImage.value === 'vendingMachine'){
-       return 1
-     }else {
-       return 2
-     }
+const status = computed(() => {
+  if (selectedImage.value === 'toilet') {
+    return 0
+  } else if (selectedImage.value === 'vendingMachine') {
+    return 1
+  } else {
+    return 2
   }
+}
 )
 const confirm = () => {
   if (cascaderValue.value.length === 0) {
@@ -94,11 +94,35 @@ const confirm = () => {
     })
     return
   }
-  showInput.value = false
-  cascaderVisible.value = false
-  console.log('当前地址:', cascaderValue.value)
-  Taro.navigateTo({
-    url: `/pages/navigation/index/index?start=${cascaderValue.value[2]}&status=${status.value}`,
+  getNearestNavigation({
+    param1: cascaderValue.value[2],
+    status: status.value
+  }).then((res) => {
+    if (res.code === 200) {
+      console.log('获取最近设施成功:', res.data)
+      // 处理获取到的最近设施数据
+      if (res.data.length > 0) {
+        showInput.value = false
+        cascaderVisible.value = false
+        console.log('当前地址:', cascaderValue.value)
+        Taro.navigateTo({
+          url: `/pages/navigation/index/index?start=${cascaderValue.value[2]}&status=${status.value}`,
+        })
+      } else {
+        Taro.showToast({
+          title: '您已在目标附近',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    } else {
+      Taro.showToast({
+        title: '获取最近设施失败',
+        icon: 'none',
+        duration: 2000
+      })
+    }
   })
+
 }
 </script>
