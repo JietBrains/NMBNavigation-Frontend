@@ -2,12 +2,12 @@
   <view class="latest-choose">
     <view class="choose-label">寻找最近设施</view>
     <view class="choose-items-wrapper">
-      <view class="choose-item" @tap="showInput = true">
+      <view class="choose-item" @tap="showInput = true; selectedImage = 'toilet'">
         <image src="../../../assets/icons/寻找最近/厕所.png" class="choose-image" mode="aspectFit"
                :class="{ 'selected': selectedImage === 'toilet' }"/>
         <view class="choose-text">厕所</view>
       </view>
-      <view class="choose-item" @tap="showInput = true">
+      <view class="choose-item" @tap="showInput = true; selectedImage = 'vendingMachine'">
         <image src="../../../assets/icons/寻找最近/售货机.png" class="choose-image" mode="aspectFit"
                :class="{ 'selected': selectedImage === 'vendingMachine' }"/>
         <view class="choose-text">售货机</view>
